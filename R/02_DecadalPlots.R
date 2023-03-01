@@ -11,24 +11,6 @@ gmri_cols()
 #decadal lat/long maps
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
-#LOOPS####
-#average functions####
-avg_sst<-function(df){
-  mean(df$avg_sur_temp, na.rm=T)
-}
-avg_bt<-function(df){
-  mean(df$avg_bot_temp, na.rm=T)
-}
-mean_depth<-function(df){
-  mean(df$avg_depth, na.rm=T)
-}
-mean_lat<-function(df){
-  mean(df$avg_lat, na.rm=T)
-}
-mean_lon<-function(df){
-  mean(df$avg_lon, na.rm=T)
-}
-
 map_data<-test%>%
   unnest(data)%>%
   select(comname, est_year, data)%>%
