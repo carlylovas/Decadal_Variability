@@ -270,9 +270,6 @@ group_3_means<-decadal_means%>%
   group_by(comname)%>%
   mutate(across(where(is.numeric), round, 3))
 
-library(MASS)
-write.matrix(Welch_TTest_1, "Welch_t_test_1.csv", sep=",")
-write.matrix(Welch_TTest_2, "Welch_t_test_2.csv", sep=",")
 write.csv(group_1_means, "Group_1_means.csv")
 write.csv(group_2_means, "Group_2_means.csv")
 write.csv(group_3_means, "Group_3_means.csv")

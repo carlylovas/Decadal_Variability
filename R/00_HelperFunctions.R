@@ -145,8 +145,13 @@ mean_lon<-function(df){
   mean(df$avg_lon, na.rm=T)
 }
 
-#p value
+#miscellaneous 
 p<-function(x) x$p.value[1]
+
+count<- function(df){
+  temp<-df%>%
+    nrow()
+}
 
 #BARTLETT TEST
 bart_sst<-function(df){
