@@ -8,6 +8,9 @@ library(cowplot)
 library(sf)
 gmri_cols()
 
+#Read in `test`  from 01_DecadalSpeciesDist.R
+test<-readRDS(here("Data", "plot_data.rds"))
+
 #decadal lat/long maps
 world <- ne_countries(scale = "medium", returnclass = "sf")
 

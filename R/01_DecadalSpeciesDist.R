@@ -1,5 +1,6 @@
 ###SEASONAL MEANS AVERAGED TO YEAR
 ##Examining distribution changes by decade##
+library(here)
 clean_survey<-gmri_survdat_prep(
   survdat_source ="most recent",
   box_location ="cloudstorage"
@@ -86,6 +87,8 @@ test<-test%>%
   group_by(comname)%>%
   nest()
 
+###save test to use in 02_DecadalPlots.R
+saveRDS(test, file = here("Data", "plot_data.rds"))
 
 #equal observations
 equal_obs_fun<- function(df){df$num_obs[1] == df$num_obs[2]}
