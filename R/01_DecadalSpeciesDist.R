@@ -1,7 +1,5 @@
 ###SEASONAL MEANS AVERAGED TO YEAR
 ##Examining distribution changes by decade##
-###Survey data with depth, surface & bottom temperature, and Janet Nye's method of calculating lat/lon
-##Run NECC helper functions & survey prep
 clean_survey<-gmri_survdat_prep(
   survdat_source ="most recent",
   box_location ="cloudstorage"
