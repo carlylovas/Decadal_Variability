@@ -202,7 +202,7 @@ ttest_group_2<-t_test%>%
        bart_p_values  = c(bart_sst_p:bart_lon_p),
        welch_p_values = c(welch_sst_p:welch_lon_p))
 
-##Clean Welch's ANOVA
+##Clean Welch's t-Test
 Welch_TTest_1<-ttest_group_1%>%
   select(comname, bart_p_values, welch_p_values, num_obs)%>%
   unnest(c(bart_p_values, welch_p_values))%>%
