@@ -1,6 +1,9 @@
 ###SEASONAL MEANS AVERAGED TO YEAR
 ##Examining distribution changes by decade##
 library(here)
+library(tidyverse)
+library(gmRi)
+
 clean_survey<-gmri_survdat_prep(
   survdat_source ="most recent",
   box_location ="cloudstorage"
@@ -45,7 +48,7 @@ weighted_data<-weighted_data%>%
   mutate(decade = 10*est_year %/% 10)
 
 library(readr)
-species <- read_csv("Data/species for dist analyses.csv")
+species <- read_csv("species for dist analyses.csv")
 species<-species%>%
   rename(comname = ...1)
 species<-tolower(species$comname)
@@ -280,34 +283,7 @@ table<-Welch_TTest_1%>%
   select(welch_lat_p, welch_lon_p, welch_sst_p, welch_bt_p, welch_depth_p)
 write.csv(table, "p_values.csv")
 
-#with species
-survey<-clean_survey%>%
-  left_join(., survey_tows)%>%
-  select(id, comname, est_year, season, avgdepth, surftemp, bottemp)%>%
-  filter(comname %in% species)%>%
-  distinct()%>% 
-  group_by(comname, season, est_year)%>%
-  nest()%>%
-  mutate(total_obs = map(data, count))
-
-survey_test<-survey%>%
-  unnest(data)%>%
-  summarise(st_na = sum(is.na(surftemp)),
-            bt_na = sum(is.na(bottemp)),
-            depth_na = sum(is.na(avgdepth)))
-
-species_survey<-survey_test%>%
-  left_join(survey %>%
-              select(total_obs)) %>%
-  unite(st_na, total_obs, col = "st_na", sep="/")%>%
-  left_join(survey %>%
-              select(total_obs)) %>%
-  unite(bt_na, total_obs, col = "bt_na", sep="/")%>%
-  left_join(survey %>%
-              select(total_obs)) %>%
-  unite(depth_na, total_obs, col = "depth_na", sep ="/")
-
-#without species
+#Survey NAs
 survey_season<- clean_survey%>%
   left_join(., survey_tows)%>%
   select(id, comname, est_year, season, avgdepth, surftemp, bottemp)%>%
