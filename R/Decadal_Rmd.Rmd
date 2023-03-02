@@ -1,0 +1,88 @@
+---
+title: "Decadal Variability"
+author: "Carly Lovas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Decadal Variability of Northeast Species Distributions
+
+This document provides the statistical analyses of NFMS trawl survey species distributions and comparisons of multiple environmental parameters over the past 50 years. 
+
+```{r read it and prep survey data, include=FALSE}
+library(gmRi)
+clean_survey<-gmri_survdat_prep(
+  survdat_source ="most recent",
+  box_location ="cloudstorage"
+)
+
+clean_survey <- clean_survey %>% 
+  distinct(est_year, survey_area, stratum, tow, est_towdate, season, comname, catchsex, .keep_all = T) %>%
+  group_by(est_year, survey_area, stratum, tow, est_towdate, season, 
+           avgdepth, surftemp, bottemp, decdeg_beglat, decdeg_beglon, comname) %>% 
+  summarise(biomass_kg = sum(biomass_kg, na.rm = T), .groups = "drop")
+
+str(clean_survey)
+
+install.packages("matrixStats")
+library(matrixStats)
+grouped_center_bio <- function(clean_survey, ...){
+  clean_survey %>% 
+    group_by(comname, ...) %>% 
+    summarise(
+      # Un-weighted averages
+      total_biomass   = sum(biomass_kg),
+      avg_biomass     = mean(biomass_kg),
+      biomass_sd      = sd(biomass_kg),
+      # All below are weighted by biomass
+      avg_depth       = weightedMean(avgdepth, w = biomass_kg, na.rm = T),
+      avg_bot_temp    = weightedMean(bottemp, w = biomass_kg, na.rm = T),
+      avg_sur_temp    = weightedMean(surftemp, w = biomass_kg, na.rm = T),
+      avg_lat         = weightedMean(decdeg_beglat, w = biomass_kg, na.rm = T),
+      avg_lon         = weightedMean(decdeg_beglon, w = biomass_kg, na.rm = T),
+      depth_sd        = weightedSd(avgdepth, w = biomass_kg, na.rm = T),
+      temp_sd         = weightedSd(bottemp, w = biomass_kg, na.rm = T),
+      lat_sd          = weightedSd(decdeg_beglat, w = biomass_kg, na.rm = T),
+      lon_sd          = weightedSd(decdeg_beglon, w = biomass_kg, na.rm = T),
+      .groups = "drop") 
+}
+
+weighted_data<-grouped_center_bio(clean_survey, est_year, season)
+weighted_data<-weighted_data%>%
+  mutate(decade = 10*est_year %/% 10)
+```
+
+## Species of Interest
+
+```{r species of interest}
+library(readr)
+species <- read_csv("Data/species for dist analyses.csv")
+species<-species%>%
+  rename(comname = ...1)
+species<-tolower(species$comname)
+
+dec_data<-weighted_data%>%
+  select(comname, est_year, season, avg_depth, avg_bot_temp, avg_sur_temp, avg_lat, avg_lon)%>%
+  mutate(decade = 10*est_year %/% 10)%>%
+  group_by(comname, season)%>%
+  nest()%>%
+  filter(comname %in% species)
+
+dec_data<-dec_data%>% 
+  filter(!comname %in% c("atlantic croaker",
+                         "atlantic hagfish",
+                         "barndoor skate",
+                         "horseshoe crab",
+                         "northern kingfish",
+                         "spot",
+                         "striped bass",
+                         "tautog",
+                         "tilefish",
+                         "weakfish")) %>%
+  mutate(num_obs = map(data, count))
+```
+

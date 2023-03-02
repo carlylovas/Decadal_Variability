@@ -344,6 +344,8 @@ species_depth_list = depth[c(1:46)]
 species_depth<-marrangeGrob(species_depth_list, nrow=6, ncol=4, top=NULL)
 ggsave("depth_multipanel_v2.pdf", species_depth, height = 15, width = 12.5, units = "in")
 
+do.call(grid.arrange, depth[c(1:4)])
+
 #decadal maps
 species_maps_list = maps[c(1:46)]
 species_maps<-marrangeGrob(species_maps_list, nrow= 3, ncol=1, top = NULL, padding = unit(0.75, "line"))
