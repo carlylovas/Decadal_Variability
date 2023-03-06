@@ -380,9 +380,18 @@ s_movers<-group_3_means%>%
                         "windowpane","white hake"))%>%
   mutate(Direction = "South")
 
+pairs<-rep(1:(nrow(movers)/2), each=2)
+
 movers<-n_movers%>%
   rbind(s_movers)%>%
-  arrange(comname)
+  arrange(comname)%>%
+  cbind(pairs)
+
+movers<-movers%>%
+  rename("pairs" = "...6")
+
+mover_names<-movers%>%
+  filter(group == "group_1")
 
 map_2010<-ggplot(data=world)+
   geom_sf()+
@@ -425,16 +434,17 @@ print(movers_map)
 print(sp_legend)
 
 #megamap
-ggplot(data=world)+
+movement<-ggplot(data=world)+
   geom_sf()+
   coord_sf(xlim=c(-78, -65), ylim=c(37,47))+
+  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname), color="#535353", linewidth = 0.5)+
   geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
-  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname))+
-  geom_text_repel(data=movers, aes(x=mean_lon, y=mean_lat, label=))
   theme_gmri()+
-  scale_color_manual(values=c("#00608A","#EA4f12"))+
+  scale_color_manual(name = "Years", labels = c("1970-2009", "2010-2019"), values=c("#00608A","#EA4f12"))+
   ggtitle("Mean Center of Biomass")+
   ylab("Center of Latitude")+
   xlab("Center of Longitude")+
+  geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.25, nudge_x= 0, min.segment.length = 0.05)+
   scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
-
+print(movement)
+grid.arrange(movement, sp_legend, ncol = 3, layout_matrix =cbind(1,1,2))
