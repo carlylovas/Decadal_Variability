@@ -391,7 +391,12 @@ movers<-movers%>%
   rename("pairs" = "...6")
 
 mover_names<-movers%>%
+  filter(!comname %in% c("american lobster","blackbelly rosefish", "smooth dogfish", "spotted hake", "cusk"))%>%
   filter(group == "group_1")
+
+mover_names_2<-movers%>%
+  filter(comname %in% c("american lobster","blackbelly rosefish", "smooth dogfish","spotted hake", "cusk"))%>%
+  filter(group == "group_3")
 
 map_2010<-ggplot(data=world)+
   geom_sf()+
@@ -444,7 +449,8 @@ movement<-ggplot(data=world)+
   ggtitle("Mean Center of Biomass")+
   ylab("Center of Latitude")+
   xlab("Center of Longitude")+
-  geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.25, nudge_x= 0, min.segment.length = 0.05)+
+  geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.5, nudge_x=0.1, min.segment.length = 0.05)+
+  geom_text_repel(data=mover_names_2, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.25, nudge_x=0.25,min.segment.length = 0.05)+
   scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
 print(movement)
 grid.arrange(movement, sp_legend, ncol = 3, layout_matrix =cbind(1,1,2))
