@@ -350,3 +350,91 @@ do.call(grid.arrange, depth[c(1:4)])
 species_maps_list = maps[c(1:46)]
 species_maps<-marrangeGrob(species_maps_list, nrow= 3, ncol=1, top = NULL, padding = unit(0.75, "line"))
 ggsave("species_maps.pdf", species_maps, height = 12, width = 8.5, units = "in")
+
+##big movers map
+n_movers<-group_3_means%>%
+  select(comname, mean_lat, mean_lon, group)%>%
+  rbind(group_1_means %>%
+                  select(comname, mean_lat, mean_lon, group))%>%
+  filter(comname %in% c("alewife",
+                        "american lobster",
+                        "american plaice",
+                        "atlantic mackerel",
+                        "black sea bass",
+                        "blackbelly rosefish",
+                        "red hake",
+                        "rosette skate",
+                        "scup",
+                        "sea raven",
+                        "sea scallop",
+                        "silver hake",
+                        "smooth dogfish",
+                        "summer flounder"))%>%
+  mutate(Direction = "North")
+
+s_movers<-group_3_means%>%
+  select(comname, mean_lat, mean_lon, group)%>%
+  rbind(group_1_means %>%
+              select(comname, mean_lat, mean_lon, group))%>%
+  filter(comname %in% c("cusk", "little skate", "spotted hake",
+                        "windowpane","white hake"))%>%
+  mutate(Direction = "South")
+
+movers<-n_movers%>%
+  rbind(s_movers)%>%
+  arrange(comname)
+
+map_2010<-ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-80, -65), ylim=c(37,47))+
+  geom_point(data=movers, aes(x= lon_19, y= lat_19, color=Direction, shape=Direction, fill=Direction), size=2)+
+  geom_text_repel(data= movers, aes(x= lon_19, y= lat_19, label=rowid), size=3.5, nudge_y= 0.15, nudge_x= -0.1, min.segment.length = 0.05)+
+  theme_gmri()+
+  ggtitle("2010-2019 Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))+
+  scale_shape_manual(values=c(24, 25))+
+  scale_color_manual(values=c("#0098B8","#DB0000"))+
+  scale_fill_manual(values=c("#0098B8","#DB0000"))
+
+map_1970<-ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-80, -65), ylim=c(37,47))+
+  geom_point(data=movers, aes(x= lon_70, y= lat_70, color=Direction, shape=Direction, fill=Direction), size=2)+
+  geom_text_repel(data= movers, aes(x= lon_70, y= lat_70, label=rowid), size=3.5, nudge_y= 0.15, nudge_x= -0.1, min.segment.length = 0.05)+
+  theme_gmri()+
+  theme_gmri()+
+  ggtitle("1970-2009 Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))+
+  scale_shape_manual(values=c(24, 25))+
+  scale_color_manual(values=c("#0098B8","#DB0000"))+
+  scale_fill_manual(values=c("#0098B8","#DB0000"))
+
+install.packages("ggpubr")
+library(ggpubr)
+movers_map<-ggarrange(map_1970, map_2010, ncol=2)
+sp_legend<-ggtexttable((movers%>%
+              select(comname)%>%
+              rename("Common Name" = "comname")),
+              theme= ttheme(base_size = 8))
+grid.arrange(movers_map, sp_legend, ncol = 5, layout_matrix = cbind(1,1,1,1,2))
+print(movers_map)
+print(sp_legend)
+
+#megamap
+ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-78, -65), ylim=c(37,47))+
+  geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
+  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname))+
+  geom_text_repel(data=movers, aes(x=mean_lon, y=mean_lat, label=))
+  theme_gmri()+
+  scale_color_manual(values=c("#00608A","#EA4f12"))+
+  ggtitle("Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
+

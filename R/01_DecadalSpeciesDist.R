@@ -48,7 +48,7 @@ weighted_data<-weighted_data%>%
   mutate(decade = 10*est_year %/% 10)
 
 library(readr)
-species <- read_csv("species for dist analyses.csv")
+species <- read_csv(here("Data","species for dist analyses.csv"))
 species<-species%>%
   rename(comname = ...1)
 species<-tolower(species$comname)
@@ -72,6 +72,10 @@ dec_data<-dec_data%>%
                          "tilefish",
                          "weakfish")) %>%
   mutate(num_obs = map(data, count))
+obs_by_season<-dec_data%>%
+  select(comname, season, num_obs)%>%
+  mutate(num_obs = as.numeric(num_obs))
+write.csv(obs_by_season, here("Temp_Results", "obs_by_season.csv"))
 
 ##aggregated averages
 test<-dec_data%>%
@@ -94,7 +98,7 @@ test<-test%>%
 saveRDS(test, file = here("Data", "plot_data.rds"))
 
 #equal observations
-equal_obs_fun<- function(df){df$num_obs[1] == df$num_obs[2]}
+equal_obs_fun<- function(df){df$num_obs[1] = df$num_obs[2]}
 equal_obs<-dec_data%>%
   select(comname, season, num_obs)%>%
   group_by(comname)%>%
