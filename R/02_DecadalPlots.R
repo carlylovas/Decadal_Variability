@@ -369,6 +369,7 @@ n_movers<-group_3_means%>%
                         "sea scallop",
                         "silver hake",
                         "smooth dogfish",
+                        "spotted hake",
                         "summer flounder"))%>%
   mutate(Direction = "North")
 
@@ -376,7 +377,7 @@ s_movers<-group_3_means%>%
   select(comname, mean_lat, mean_lon, group)%>%
   rbind(group_1_means %>%
               select(comname, mean_lat, mean_lon, group))%>%
-  filter(comname %in% c("cusk", "little skate", "spotted hake",
+  filter(comname %in% c("cusk", "little skate",
                         "windowpane","white hake"))%>%
   mutate(Direction = "South")
 
@@ -391,11 +392,6 @@ movers<-movers%>%
   rename("pairs" = "...6")
 
 mover_names<-movers%>%
-  filter(!comname %in% c("american lobster","blackbelly rosefish", "smooth dogfish", "spotted hake", "cusk"))%>%
-  filter(group == "group_1")
-
-mover_names_2<-movers%>%
-  filter(comname %in% c("american lobster","blackbelly rosefish", "smooth dogfish","spotted hake", "cusk"))%>%
   filter(group == "group_3")
 
 map_2010<-ggplot(data=world)+
@@ -432,16 +428,18 @@ library(ggpubr)
 movers_map<-ggarrange(map_1970, map_2010, ncol=2)
 sp_legend<-ggtexttable((movers%>%
               select(comname)%>%
-              rename("Common Name" = "comname")),
+              rename("Common Name" = "comname")%>%
+                distinct()),
               theme= ttheme(base_size = 8))
 grid.arrange(movers_map, sp_legend, ncol = 5, layout_matrix = cbind(1,1,1,1,2))
 print(movers_map)
 print(sp_legend)
+ggsave("legend.png", sp_legend)
 
 #megamap
 movement<-ggplot(data=world)+
   geom_sf()+
-  coord_sf(xlim=c(-78, -65), ylim=c(37,47))+
+  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47))+
   geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname), color="#535353", linewidth = 0.5)+
   geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
   theme_gmri()+
@@ -449,8 +447,47 @@ movement<-ggplot(data=world)+
   ggtitle("Mean Center of Biomass")+
   ylab("Center of Latitude")+
   xlab("Center of Longitude")+
-  geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.5, nudge_x=0.1, min.segment.length = 0.05)+
-  geom_text_repel(data=mover_names_2, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.25, nudge_x=0.25,min.segment.length = 0.05)+
+  #geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y=0.5, nudge_x=0.1, min.segment.length = 0.05)+
   scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
 print(movement)
 grid.arrange(movement, sp_legend, ncol = 3, layout_matrix =cbind(1,1,2))
+
+#megamap facet
+map_facet<-ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-75, -66), ylim=c(37.5,45))+
+  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname), color="#535353", linewidth = 0.5)+
+  geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
+  theme_gmri()+
+  scale_color_manual(name = "Years", labels = c("1970-2009", "2010-2019"), values=c("#00608A","#EA4f12"))+
+  ggtitle("Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  geom_text_repel(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs), size=3.5, nudge_y= -0.25, nudge_x=0.1, min.segment.length = 0.02)+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))+
+  facet_wrap(~Direction)
+dir_map<-grid.arrange(map_facet, sp_legend, ncol = 4, layout_matrix =cbind(1,1,1,2))
+ggsave("map_facet.png",dir_map, height=5, width=7, units="in", dpi=900)
+##mover plots
+movers_lat<-lat[c("alewife",
+                  "american lobster",
+                  "american plaice",
+                  "atlantic mackerel",
+                  "black sea bass",
+                  "blackbelly rosefish",
+                  "cusk",
+                  "little skate",
+                  "red hake",
+                  "rosette skate",
+                  "scup",
+                  "sea raven",
+                  "sea scallop",
+                  "silver hake",
+                  "smooth dogfish",
+                  "spotted hake",
+                  "summer flounder",
+                  "white hake",
+                  "windowpane")]
+movers_lat<-marrangeGrob(movers_lat, ncol=3, nrow=4, top=NULL)
+ggsave("movers_lat.pdf", movers_lat, height = 11, width = 8.5, units = "in")
+
