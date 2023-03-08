@@ -468,6 +468,7 @@ map_facet<-ggplot(data=world)+
   facet_wrap(~Direction)
 dir_map<-grid.arrange(map_facet, sp_legend, ncol = 4, layout_matrix =cbind(1,1,1,2))
 ggsave("map_facet.png",dir_map, height=5, width=7, units="in", dpi=900)
+
 ##mover plots
 movers_lat<-lat[c("alewife",
                   "american lobster",
@@ -491,3 +492,24 @@ movers_lat<-lat[c("alewife",
 movers_lat<-marrangeGrob(movers_lat, ncol=3, nrow=4, top=NULL)
 ggsave("movers_lat.pdf", movers_lat, height = 11, width = 8.5, units = "in")
 
+movers_lon<-lon[c("alewife",
+                 "american lobster",
+                 "american plaice",
+                 "atlantic mackerel",
+                 "black sea bass",
+                 "blackbelly rosefish",
+                 "cusk",
+                 "little skate",
+                 "red hake",
+                 "rosette skate",
+                 "scup",
+                 "sea raven",
+                 "sea scallop",
+                 "silver hake",
+                 "smooth dogfish",
+                 "spotted hake",
+                 "summer flounder",
+                 "white hake",
+                 "windowpane")]
+movers_lon<-marrangeGrob(movers_lon, ncol=3, nrow=4, top=NULL)
+ggsave("movers_lon.pdf", movers_lon, height=11, width=8.5, units="in")
