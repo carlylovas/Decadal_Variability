@@ -114,9 +114,13 @@ grouped_data<-weighted_data%>%
   rowid_to_column()
 
 well_rep<-grouped_data%>%
-  filter(rowid %in% seq(1,50))%>%
-  select(!data)%>%
-  select(!rowid)
+  filter(rowid %in% seq(1,66))%>%
+  unnest(data)%>%
+  select(!rowid)%>%
+  group_by(comname, season)%>%
+  nest()%>%
+  mutate(num_obs = map_dbl(data, count))%>%
+  select(!data)
 write.csv(well_rep, "well_represented_spp.csv")
 
 current_sp<-dec_data%>%
@@ -131,6 +135,7 @@ all_spp<-well_rep%>%
   distinct()%>%
   arrange(comname)
 
+##most observed species per season 
 top_spp<-weighted_data%>%
   filter(comname %in% all_spp$comname)%>%
   group_by(comname, season)%>%
@@ -140,11 +145,9 @@ top_spp<-weighted_data%>%
 
 write.csv(top_spp, "top_species.csv")
 
+#total observations by tow 
 grouped_survey<-clean_survey%>%
   group_by(comname, season)%>%
   nest()%>%
   mutate(num_obs = map_dbl(data, count))%>%
-  arrange(desc(num_obs))%>%
-  rowid_to_column()%>%
-  filter(rowid %in% seq(1,50))
-  
+  arrange(desc(num_obs))

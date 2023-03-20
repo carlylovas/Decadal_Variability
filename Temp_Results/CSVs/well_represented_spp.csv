@@ -1,0 +1,133 @@
+"","comname","season","num_obs"
+"1","acadian redfish","Spring",50
+"2","acadian redfish","Fall",50
+"3","alewife","Spring",50
+"4","alewife","Fall",50
+"5","american plaice","Spring",50
+"6","american plaice","Fall",50
+"7","american shad","Spring",50
+"8","american shad","Fall",50
+"9","atlantic cod","Spring",50
+"10","atlantic cod","Fall",50
+"11","atlantic herring","Spring",50
+"12","atlantic herring","Fall",50
+"13","atlantic mackerel","Spring",50
+"14","atlantic mackerel","Fall",50
+"15","atlantic rock crab","Spring",50
+"16","atlantic rock crab","Fall",50
+"17","black sea bass","Spring",50
+"18","black sea bass","Fall",50
+"19","blackbelly rosefish","Spring",50
+"20","blackbelly rosefish","Fall",50
+"21","butterfish","Spring",50
+"22","butterfish","Fall",50
+"23","cunner","Spring",50
+"24","cunner","Fall",50
+"25","cusk","Spring",50
+"26","cusk","Fall",50
+"27","fawn cusk-eel","Spring",50
+"28","fawn cusk-eel","Fall",50
+"29","fourbeard rockling","Spring",50
+"30","fourbeard rockling","Fall",50
+"31","fourspot flounder","Spring",50
+"32","fourspot flounder","Fall",50
+"33","goosefish","Spring",50
+"34","goosefish","Fall",50
+"35","gulf stream flounder","Spring",50
+"36","gulf stream flounder","Fall",50
+"37","haddock","Spring",50
+"38","haddock","Fall",50
+"39","little skate","Spring",50
+"40","little skate","Fall",50
+"41","longfin squid","Spring",50
+"42","longfin squid","Fall",50
+"43","longhorn sculpin","Spring",50
+"44","longhorn sculpin","Fall",50
+"45","northern searobin","Spring",50
+"46","northern searobin","Fall",50
+"47","northern shortfin squid","Spring",50
+"48","northern shortfin squid","Fall",50
+"49","ocean pout","Spring",50
+"50","ocean pout","Fall",50
+"51","offshore hake","Spring",50
+"52","offshore hake","Fall",50
+"53","pollock","Spring",50
+"54","pollock","Fall",50
+"55","red hake","Spring",50
+"56","red hake","Fall",50
+"57","scup","Spring",50
+"58","scup","Fall",50
+"59","sea raven","Spring",50
+"60","sea raven","Fall",50
+"61","sea scallop","Spring",50
+"62","sea scallop","Fall",50
+"63","silver hake","Spring",50
+"64","silver hake","Fall",50
+"65","smooth skate","Spring",50
+"66","smooth skate","Fall",50
+"67","spiny dogfish","Spring",50
+"68","spiny dogfish","Fall",50
+"69","spotted hake","Spring",50
+"70","spotted hake","Fall",50
+"71","summer flounder","Spring",50
+"72","summer flounder","Fall",50
+"73","thorny skate","Spring",50
+"74","thorny skate","Fall",50
+"75","white hake","Spring",50
+"76","white hake","Fall",50
+"77","windowpane","Spring",50
+"78","windowpane","Fall",50
+"79","winter flounder","Spring",50
+"80","winter flounder","Fall",50
+"81","winter skate","Spring",50
+"82","winter skate","Fall",50
+"83","witch flounder","Spring",50
+"84","witch flounder","Fall",50
+"85","yellowtail flounder","Spring",50
+"86","yellowtail flounder","Fall",50
+"87","atlantic hagfish","Spring",49
+"88","atlantic hagfish","Fall",50
+"89","atlantic wolffish","Spring",50
+"90","atlantic wolffish","Fall",49
+"91","longfin hake","Spring",50
+"92","longfin hake","Fall",49
+"93","northern sand lance","Spring",50
+"94","northern sand lance","Fall",49
+"95","rosette skate","Fall",50
+"96","rosette skate","Spring",49
+"97","alligatorfish","Spring",48
+"98","alligatorfish","Fall",50
+"99","blueback herring","Spring",50
+"100","blueback herring","Fall",48
+"101","smooth dogfish","Spring",49
+"102","smooth dogfish","Fall",49
+"103","atlantic halibut","Spring",50
+"104","atlantic halibut","Fall",47
+"105","chain dogfish","Spring",50
+"106","chain dogfish","Fall",47
+"107","jonah crab","Spring",49
+"108","jonah crab","Fall",48
+"109","lanternfish uncl","Spring",49
+"110","lanternfish uncl","Fall",48
+"111","shortnose greeneye","Spring",48
+"112","shortnose greeneye","Fall",49
+"113","wrymouth","Spring",48
+"114","wrymouth","Fall",48
+"115","american lobster","Spring",48
+"116","american lobster","Fall",47
+"117","clearnose skate","Fall",48
+"118","clearnose skate","Spring",47
+"119","atlantic argentine","Spring",48
+"120","atlantic argentine","Fall",46
+"121","striped searobin","Spring",50
+"122","striped searobin","Fall",44
+"123","lumpfish","Spring",48
+"124","lumpfish","Fall",45
+"125","moustache sculpin","Spring",45
+"126","moustache sculpin","Fall",48
+"127","grenadier uncl","Spring",45
+"128","grenadier uncl","Fall",47
+"129","armored searobin","Spring",44
+"130","armored searobin","Fall",47
+"131","weitzmans pearlsides","Spring",45
+"132","weitzmans pearlsides","Fall",46
