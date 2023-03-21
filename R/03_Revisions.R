@@ -119,6 +119,7 @@ well_rep<-grouped_data%>%
   select(!rowid)%>%
   group_by(comname, season)%>%
   nest()%>%
+  rowid_to_column()%>%
   mutate(num_obs = map_dbl(data, count))%>%
   select(!data)
 write.csv(well_rep, "well_represented_spp.csv")
@@ -148,6 +149,87 @@ write.csv(top_spp, "top_species.csv")
 #total observations by tow 
 grouped_survey<-clean_survey%>%
   group_by(comname, season)%>%
+  distinct()%>%
   nest()%>%
-  mutate(num_obs = map_dbl(data, count))%>%
+  mutate(num_obs = unique(map_dbl(data, count)))%>%
   arrange(desc(num_obs))
+
+##missing years 
+missing_years<-grouped_data%>%
+  filter(rowid %in% seq(58,66))%>%
+  unnest(data)%>%
+  select(comname, season, est_year)%>%
+  group_by(comname, season)%>%
+  nest()%>%
+  mutate(season_obs = map_dbl(data, count),
+         missed_years = map(data, missed_years))
+
+missed_years<-function(x){
+    setdiff(1970:2019, x$est_year)
+}
+
+missed_years_data<-missing_years%>%
+  select(!data)
+
+write.matrix(missed_years_data, "missing_years.csv", sep=",")
+
+##catch abundance
+biomass<-function(df){
+  sum(df$biomass_kg)
+}
+
+abd<-clean_survey%>%
+  filter(comname %in% well_rep$comname)%>%
+  select(tow, season, est_year, comname)%>%
+  distinct()%>%
+  group_by(comname)%>%
+  nest()%>%
+  mutate(num_tows = map_dbl(data, count))
+
+season_abd<-clean_survey%>%
+  filter(comname %in% well_rep$comname)%>%
+  select(season, est_year, comname, abundance)%>%
+  group_by(comname, season)%>%
+  nest()%>%
+  mutate(total_catch = map_dbl(data, count))%>%
+  arrange(comname)
+
+##time series comparison
+abd_species<-well_rep%>%
+  filter(rowid %in% seq(85,132))%>%
+  select(!rowid)
+
+abd_species<-season_abd%>%
+  filter(comname %in% abd_species$comname)%>%
+  unnest(data)%>%
+  group_by(comname, season, total_catch)%>% 
+  nest()
+
+nrow(abd_species)
+abnd<-vector("list", length = 24)
+names(abnd)=paste(unique(abd_species$comname))
+
+for(i in 1:24){
+  print(i)
+  loop_df<-abd_species[i,]%>%
+    unnest(data)%>%
+    group_by(comname, est_year, season)%>%
+    nest()%>%
+    mutate(total =map_dbl(data, count))
+  
+  abnd[[i]]<-ggplot(data=loop_df, aes(x=est_year, y=total))+
+                  geom_line(color = "#E9E9E9", linewidth = 0.5)+
+                  geom_point(size=0.5)+
+                  theme_gmri(axis.title = element_blank(),
+                             plot.title = element_text(size = 11),
+                             axis.text.y = element_text(size=10))+
+                  ggtitle(toupper(names(abnd)[i]))+
+                  xlab("Year")+
+                  ylab("Catch Abundance")+
+                  facet_wrap(~season, nrow=2, scales = "free_y")
+}
+
+abnd_list<-abnd[c(1:24)]
+abnd_time_series<-marrangeGrob(abnd_list, nrow=4, ncol=2, top=NULL)
+ggsave("abnd_time_series.pdf", abnd_time_series, height = 11, width = 8.5, units = "in")
+

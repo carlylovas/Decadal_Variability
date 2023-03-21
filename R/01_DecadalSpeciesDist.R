@@ -12,7 +12,7 @@ clean_survey<-gmri_survdat_prep(
 clean_survey <- clean_survey %>% 
   distinct(est_year, survey_area, stratum, tow, est_towdate, season, comname, catchsex, .keep_all = T) %>%
   group_by(est_year, survey_area, stratum, tow, est_towdate, season, 
-           avgdepth, surftemp, bottemp, decdeg_beglat, decdeg_beglon, comname) %>% 
+           avgdepth, surftemp, bottemp, decdeg_beglat, decdeg_beglon, comname, abundance) %>% 
   summarise(biomass_kg = sum(biomass_kg, na.rm = T), .groups = "drop")
 
 str(clean_survey)

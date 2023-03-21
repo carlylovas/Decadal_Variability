@@ -93,7 +93,7 @@ for(i in 1:46){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(lat)[i]))+
+    ggtitle("Average Latitude")+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_lat)), color="#00608A", linewidth=0.75)+
     geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_lat)), color="#EA4F12", linewidth=0.75)
 }
@@ -144,7 +144,7 @@ for(i in 1:46){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(lon)[i]))+
+    ggtitle("Average Longitude")+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_lon)), color="#00608A", linewidth=0.75)+
     geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_lon)), color="#EA4F12", linewidth=0.75)
 }
@@ -196,7 +196,7 @@ for(i in 1:46){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(st)[i]))+
+    ggtitle("Surface Temperature")+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_sst)), color="#00608A", linewidth=0.75)+
     geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_sst)), color="#EA4F12", linewidth=0.75)
 }
@@ -247,7 +247,7 @@ for(i in 1:46){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(bt)[i]))+
+    ggtitle("Bottom Temperature")+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_bt)), color="#00608A", linewidth=0.75)+
     geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_bt)), color="#EA4F12", linewidth=0.75)
 }
@@ -298,7 +298,7 @@ for(i in 1:46){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(depth)[i]))+
+    ggtitle("Average Depth")+
     scale_y_reverse()+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_depth)), color="#00608A", linewidth=0.75)+
     geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_depth)), color="#EA4F12", linewidth=0.75)
@@ -511,5 +511,7 @@ movers_lon<-lon[c("alewife",
                  "summer flounder",
                  "white hake",
                  "windowpane")]
-movers_lon<-marrangeGrob(movers_lon, ncol=3, nrow=4, top=NULL)
+
+movers_lon<-marrangeGrob(movers_lon, nrow=4, ncol=3, top=NULL) ##maybe layout_matrix?
+ggsave("movers_lon.pdf", movers_lon, height = 11, width = 8.5, units = "in")
 ggsave("movers_lon.pdf", movers_lon, height=11, width=8.5, units="in")
