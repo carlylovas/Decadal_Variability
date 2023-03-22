@@ -2,7 +2,18 @@
 #load in clean_survey
 
 rev_data<-weighted_data%>%
-  filter(comname %in% c("northern searobin", "striped searobin"))%>%
+  filter(comname %in% c("american plaice",
+                        "atlantic cod",
+                        "atlantic herring",
+                        "black sea bass",
+                        "butterfish",
+                        "haddock",
+                        "pollock",
+                        "scup",
+                        "silver hake",
+                        "white hake",
+                        "winter flounder",
+                        "yellowtail flounder"))%>%
   group_by(comname, est_year)%>%
   nest() %>%
   mutate( avg_depth       = as.numeric(map(data, possibly(mean_depth, NA))),
@@ -88,12 +99,12 @@ welch.T.revised<-rev.stats%>%
   relocate(welch_lon_p, .after=bart_lon_p)%>%
   mutate(across(where(is.numeric), round, 3))
 
-searobin_p<-welch.T.revised%>%
-  select(welch_lat_p, welch_lon_p, welch_sst_p, welch_bt_p, welch_depth_p)
-write.csv(searobin_p, "searobin_p_values.csv")
+#searobin_p<-welch.T.revised%>%
+  #select(welch_lat_p, welch_lon_p, welch_sst_p, welch_bt_p, welch_depth_p)
+#write.csv(searobin_p, "searobin_p_values.csv")
 
 ##means
-searobin_means<-rev_t_test%>%
+rev_means<-rev_t_test%>%
   group_by(comname, group)%>%
   nest()%>%
   mutate(mean_sst   = as.numeric(map(data, avg_sst)),
@@ -101,9 +112,10 @@ searobin_means<-rev_t_test%>%
          mean_depth = as.numeric(map(data, mean_depth)),
          mean_lat   = as.numeric(map(data, mean_lat)),
          mean_lon   = as.numeric(map(data, mean_lon)))
-searobin_means<-searobin_means%>%
-  select(!data)
-write.csv(searobin_means, "searobin_means.csv")
+
+#searobin_means<-searobin_means%>%
+  #select(!data)
+#write.csv(searobin_means, "searobin_means.csv")
 
 ##Richard's revisions
 grouped_data<-weighted_data%>%
@@ -177,6 +189,9 @@ write.matrix(missed_years_data, "missing_years.csv", sep=",")
 biomass<-function(df){
   sum(df$biomass_kg)
 }
+abundance<-function(df){
+  sum(df$abundance)
+}
 
 abd<-clean_survey%>%
   filter(comname %in% well_rep$comname)%>%
@@ -191,7 +206,8 @@ season_abd<-clean_survey%>%
   select(season, est_year, comname, abundance)%>%
   group_by(comname, season)%>%
   nest()%>%
-  mutate(total_catch = map_dbl(data, count))%>%
+  mutate(total_catch = map_dbl(data, abundance),
+         total_tows = map_dbl(data, count))%>%
   arrange(comname)
 
 ##time series comparison
@@ -202,16 +218,21 @@ abd_species<-well_rep%>%
 abd_species<-season_abd%>%
   filter(comname %in% abd_species$comname)%>%
   unnest(data)%>%
-  group_by(comname, season, total_catch)%>% 
+  group_by(comname, season, total_catch, total_tows)%>% 
   nest()
 
-nrow(abd_species)
+abnd_species <- abd_species%>%
+  relocate(season, .after = comname)%>%
+  select(!data)
+write.csv(abnd_species, "species_abundance.csv")
+
+ nrow(abnd_species)
 abnd<-vector("list", length = 24)
 names(abnd)=paste(unique(abd_species$comname))
 
 for(i in 1:24){
   print(i)
-  loop_df<-abd_species[i,]%>%
+  loop_df<-abnd_species[i,]%>%
     unnest(data)%>%
     group_by(comname, est_year, season)%>%
     nest()%>%
@@ -220,16 +241,31 @@ for(i in 1:24){
   abnd[[i]]<-ggplot(data=loop_df, aes(x=est_year, y=total))+
                   geom_line(color = "#E9E9E9", linewidth = 0.5)+
                   geom_point(size=0.5)+
-                  theme_gmri(axis.title = element_blank(),
-                             plot.title = element_text(size = 11),
+                  theme_gmri(plot.title = element_text(size = 11),
                              axis.text.y = element_text(size=10))+
                   ggtitle(toupper(names(abnd)[i]))+
                   xlab("Year")+
-                  ylab("Catch Abundance")+
+                  ylab("Total Catch Abundance")+
                   facet_wrap(~season, nrow=2, scales = "free_y")
 }
 
-abnd_list<-abnd[c(1:24)]
-abnd_time_series<-marrangeGrob(abnd_list, nrow=4, ncol=2, top=NULL)
-ggsave("abnd_time_series.pdf", abnd_time_series, height = 11, width = 8.5, units = "in")
+install.packages("patchwork")
+library(patchwork)
 
+abnd_list<-abnd[c(1:24)]
+abnd_1 <- wrap_plots(abnd[1:8])
+print(abnd_1)
+
+
+abnd_2 <- wrap_plots(abnd[9:16], ncol = 2, nrow = 4, heights = 4, widths = 3)
+abnd_3 <- wrap_plots(abnd[17:24], ncol = 2, nrow = 4, heights = 4, widths = 3)
+ggsave("abnd_1.pdf", abnd_1, height = 11, width = 8.5, units = "in")
+ggsave("abnd_2.pdf", abnd_2, height = 11, width = 8.5, units = "in")
+ggsave("abnd_3.pdf", abnd_3, height = 11, width = 8.5, units = "in")
+
+#abnd_time_series<-marrangeGrob(abnd_list, nrow=4, ncol=2, top=NULL)
+#ggsave("abnd_time_series.pdf", abnd_time_series, height = 11, width = 8.5, units = "in")
+
+##filter by growth/productivity species
+#re-run decadal plots with rev_data
+#jk Kathy says no
