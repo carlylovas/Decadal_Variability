@@ -243,6 +243,7 @@ legend<-ggtexttable((movers%>%
                        distinct()),
                     theme= ttheme(base_size = 8))
 print(legend)
+ggsave("legend.png", legend)
 
 #directions
 n_movers<-group_2_rev%>%
@@ -302,4 +303,7 @@ movement_no_labels<-ggplot(data=world)+
   xlab("Center of Longitude")+
   scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
 print(movement_no_labels)
+
+ggsave("movement_noLabels.png", movement_no_labels, height = 10, width = 10, units="in")
+
 #grid.arrange(movement, legend, ncol = 3, layout_matrix =cbind(1,1,2))
