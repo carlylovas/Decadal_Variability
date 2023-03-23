@@ -230,3 +230,76 @@ ggsave("bt_multipanel_v3.pdf", species_bt, height = 15, width = 12.5, units ="in
 #depth plots
 species_depth<-marrangeGrob(depth_list, layout_matrix = matrix(1:20,  nrow = 5, ncol=4, byrow=TRUE), top=NULL)
 ggsave("depth_multipanel_v3.pdf", species_depth, height = 15, width = 12.5, units ="in")
+
+#MOVERS MAP
+movers<-read_csv("Data/movers.csv", col_names=FALSE)
+movers<-movers%>%
+  rename("comname" = "X1") 
+
+#map legend
+legend<-ggtexttable((movers%>%
+                       select(comname)%>%
+                       rename("Common Name" = "comname")%>%
+                       distinct()),
+                    theme= ttheme(base_size = 8))
+print(legend)
+
+#directions
+n_movers<-group_2_rev%>%
+  select(comname, mean_lat, mean_lon, group)%>%
+  rbind(group_1_rev %>%
+          select(comname, mean_lat, mean_lon, group))%>%
+  filter(comname %in% movers$comname)%>%
+  filter(!comname %in% c("cusk", "little skate", "windowpane"))%>%
+  mutate(Direction = "North")
+
+s_movers<-group_2_rev%>%
+  select(comname, mean_lat, mean_lon, group)%>%
+  rbind(group_1_rev %>%
+          select(comname, mean_lat, mean_lon, group))%>%
+  filter(comname %in% c("cusk", "little skate",
+                        "windowpane"))%>%
+  mutate(Direction = "South")
+
+pairs<-rep(1:(44/2), each=2)
+
+movers<-n_movers%>%
+  rbind(s_movers)%>%
+  arrange(comname)%>%
+  cbind(pairs)
+
+movers<-movers%>%
+  rename("pairs" = "...6")
+
+mover_names<-movers%>%
+  filter(group == "group_2")
+
+#map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+movement<-ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47))+
+  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname), color="#535353", linewidth = 0.5)+
+  geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
+  theme_gmri()+
+  scale_color_manual(name = "Years", labels = c("1970-2009", "2010-2019"), values=c("#00608A","#EA4f12"))+
+  ggtitle("Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  geom_text(data=mover_names, aes(x=mean_lon, y=mean_lat, label=pairs))+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
+print(movement)
+
+movement_no_labels<-ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47))+
+  geom_line(data=movers, aes(x=mean_lon, y=mean_lat, group = comname), color="#535353", linewidth = 0.5)+
+  geom_point(data=movers, aes(x=mean_lon, y=mean_lat, color= group), size=2)+
+  theme_gmri()+
+  scale_color_manual(name = "Years", labels = c("1970-2009", "2010-2019"), values=c("#00608A","#EA4f12"))+
+  ggtitle("Mean Center of Biomass")+
+  ylab("Center of Latitude")+
+  xlab("Center of Longitude")+
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
+print(movement_no_labels)
+#grid.arrange(movement, legend, ncol = 3, layout_matrix =cbind(1,1,2))
