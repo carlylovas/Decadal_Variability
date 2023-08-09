@@ -1,0 +1,71 @@
+﻿comname,variable,1970-2009,2010-2019,difference,direction
+atlantic rock crab,sst,12.686,14.232,1.546,warmer
+atlantic rock crab,bt,9.319,9.761,0.442,warmer
+atlantic rock crab,depth,89.018,100.197,11.179,deeper
+atlantic rock crab,lat,39.513,39.495,-0.018,southward
+atlantic rock crab,lon,-71.987,-71.512,0.475,eastward
+butterfish,sst,13.46,14.9,1.44,warmer
+butterfish,bt,11.586,12.359,0.773,warmer
+butterfish,depth,102.687,112.708,10.021,deeper
+butterfish,lat,39.138,39.033,-0.105,southward
+butterfish,lon,-72.048,-71.996,0.052,eastward
+chain dogfish,sst,14.946,16.349,1.403,warmer
+chain dogfish,bt,11.537,12.216,0.679,warmer
+chain dogfish,depth,163.269,179.48,16.211,deeper
+chain dogfish,lat,38.132,38.683,0.551,northward
+chain dogfish,lon,-73.425,-72.744,0.681,eastward
+gulf stream flounder,sst,12.03,13.8,1.77,warmer
+gulf stream flounder,bt,9.622,10.357,0.735,warmer
+gulf stream flounder,depth,90.735,109.007,18.272,deeper
+gulf stream flounder,lat,40.155,40.081,-0.074,southward
+gulf stream flounder,lon,-70.799,-71.211,-0.412,westward
+jonah crab,sst,11.12,11.906,0.786,warmer
+jonah crab,bt,8.818,8.425,-0.393,colder
+jonah crab,depth,152.949,169.749,16.8,deeper
+jonah crab,lat,41.11,41.791,0.681,northward
+jonah crab,lon,-69.86,-69.609,0.251,eastward
+northern sand lance,sst,10.26,12.691,2.431,warmer
+northern sand lance,bt,8.956,9.368,0.412,warmer
+northern sand lance,depth,42.5,63.927,21.427,deeper
+northern sand lance,lat,40.735,40.739,0.004,northward
+northern sand lance,lon,-70.406,-70.474,-0.068,westward
+northern shortfin squid,sst,13.431,15.82,2.389,warmer
+northern shortfin squid,bt,10.724,11.701,0.977,warmer
+northern shortfin squid,depth,160.625,180.787,20.162,deeper
+northern shortfin squid,lat,39.318,38.856,-0.462,southward
+northern shortfin squid,lon,-71.506,-71.848,-0.342,westward
+offshore hake,sst,14.335,16.686,2.351,warmer
+offshore hake,bt,9.626,11.087,1.461,warmer
+offshore hake,depth,268.916,263.667,-5.249,shallower
+offshore hake,lat,39.208,38.422,-0.786,southward
+offshore hake,lon,-71.548,-72.695,-1.147,westward
+red hake,sst,9.903,11.068,1.165,warmer
+red hake,bt,8.139,8.968,0.829,warmer
+red hake,depth,134.414,164.212,29.798,deeper
+red hake,lat,41.517,41.78,0.263,northward
+red hake,lon,-69.431,-68.661,0.77,eastward
+smooth skate,sst,8.682,9.94,1.258,warmer
+smooth skate,bt,6.951,8.039,1.088,warmer
+smooth skate,depth,189.116,210.028,20.912,deeper
+smooth skate,lat,42.592,42.722,0.13,northward
+smooth skate,lon,-68.096,-67.955,0.141,eastward
+spotted hake,sst,15.425,16.437,1.012,warmer
+spotted hake,bt,11.187,11.625,0.438,warmer
+spotted hake,depth,113.355,140.757,27.402,deeper
+spotted hake,lat,37.885,38.183,0.298,northward
+spotted hake,lon,-73.723,-73.273,0.45,eastward
+summer flounder,sst,12.483,13.226,0.743,warmer
+summer flounder,bt,12.39,12.874,0.484,warmer
+summer flounder,depth,65.097,76.03,10.933,deeper
+summer flounder,lat,39.494,40.01,0.516,northward
+summer flounder,lon,-72.092,-71.528,0.564,eastward
+thorny skate,sst,8.52,10.281,1.761,warmer
+thorny skate,bt,6.685,7.533,0.848,warmer
+thorny skate,depth,154.464,160.969,6.505,deeper
+thorny skate,lat,42.627,42.506,-0.121,southward
+thorny skate,lon,-68.546,-68.487,0.059,eastward
+windowpane,sst,10.078,11.954,1.876,warmer
+windowpane,bt,9.766,10.78,1.014,warmer
+windowpane,depth,56.085,52.393,-3.692,shallower
+windowpane,lat,40.954,40.732,-0.222,southward
+windowpane,lon,-69.03,-69.882,-0.852,westward
