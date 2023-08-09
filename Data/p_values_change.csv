@@ -1,0 +1,246 @@
+comname,variable,revised,original,significant,significant_change,direction
+acadian redfish,sst,0.001,0.001,TRUE,FALSE,NA
+acadian redfish,bt,0,0,TRUE,FALSE,NA
+acadian redfish,lat,0.618,0.443,FALSE,FALSE,NA
+acadian redfish,lon,0.609,0.629,FALSE,FALSE,NA
+acadian redfish,depth,0.292,0.328,FALSE,FALSE,NA
+alewife,sst,0.014,0.006,TRUE,FALSE,NA
+alewife,bt,0.372,0.641,FALSE,FALSE,NA
+alewife,lat,0,0,TRUE,FALSE,NA
+alewife,lon,0.003,0.002,TRUE,FALSE,NA
+alewife,depth,0,0,TRUE,FALSE,NA
+american lobster,sst,0.793,0.628,FALSE,FALSE,NA
+american lobster,bt,0.037,0.033,TRUE,FALSE,NA
+american lobster,lat,0,0,TRUE,FALSE,NA
+american lobster,lon,0,0,TRUE,FALSE,NA
+american lobster,depth,0.125,0.072,FALSE,FALSE,NA
+american plaice,sst,0.001,0,TRUE,FALSE,NA
+american plaice,bt,0.005,0.004,TRUE,FALSE,NA
+american plaice,lat,0.006,0.002,TRUE,FALSE,NA
+american plaice,lon,0.007,0.004,TRUE,FALSE,NA
+american plaice,depth,0.003,0.001,TRUE,FALSE,NA
+american shad,sst,0.027,0.03,TRUE,FALSE,NA
+american shad,bt,0.014,0.021,TRUE,FALSE,NA
+american shad,lat,0.257,0.168,FALSE,FALSE,NA
+american shad,lon,0.418,0.265,FALSE,FALSE,NA
+american shad,depth,0.119,0.059,FALSE,FALSE,NA
+atlantic cod,sst,0.002,0.001,TRUE,FALSE,NA
+atlantic cod,bt,0,0,TRUE,FALSE,NA
+atlantic cod,lat,0.005,0.002,TRUE,FALSE,NA
+atlantic cod,lon,0.227,0.182,FALSE,FALSE,NA
+atlantic cod,depth,0.92,0.682,FALSE,FALSE,NA
+atlantic hagfish,sst,0.014,0.033,TRUE,FALSE,NA
+atlantic hagfish,bt,0.001,0.001,TRUE,FALSE,NA
+atlantic hagfish,lat,0.731,0.446,FALSE,FALSE,NA
+atlantic hagfish,lon,0.036,0.016,TRUE,FALSE,NA
+atlantic hagfish,depth,0.917,0.985,FALSE,FALSE,NA
+atlantic herring,sst,0.029,0.016,TRUE,FALSE,NA
+atlantic herring,bt,0.029,0.016,TRUE,FALSE,NA
+atlantic herring,lat,0.097,0.063,FALSE,FALSE,NA
+atlantic herring,lon,0.013,0.012,TRUE,FALSE,NA
+atlantic herring,depth,0.071,0.086,FALSE,FALSE,NA
+atlantic mackerel,sst,0.51,0.445,FALSE,FALSE,NA
+atlantic mackerel,bt,0.794,0.694,FALSE,FALSE,NA
+atlantic mackerel,lat,0.001,0,TRUE,FALSE,NA
+atlantic mackerel,lon,0.02,0.009,TRUE,FALSE,NA
+atlantic mackerel,depth,0.785,0.706,FALSE,FALSE,NA
+atlantic rock crab,sst,0.003,0.067,FALSE,TRUE,-
+atlantic rock crab,bt,0.257,0.235,FALSE,FALSE,NA
+atlantic rock crab,lat,0.943,0.59,FALSE,FALSE,NA
+atlantic rock crab,lon,0.161,0.085,FALSE,FALSE,NA
+atlantic rock crab,depth,0.336,0.613,FALSE,FALSE,NA
+black sea bass,sst,0.085,0.064,FALSE,FALSE,NA
+black sea bass,bt,0.759,0.583,FALSE,FALSE,NA
+black sea bass,lat,0,0,TRUE,FALSE,NA
+black sea bass,lon,0,0,TRUE,FALSE,NA
+black sea bass,depth,0.466,0.255,FALSE,FALSE,NA
+blackbelly rosefish,sst,0.01,0.004,TRUE,FALSE,NA
+blackbelly rosefish,bt,0.043,0.026,TRUE,FALSE,NA
+blackbelly rosefish,lat,0,0,TRUE,FALSE,NA
+blackbelly rosefish,lon,0,0,TRUE,FALSE,NA
+blackbelly rosefish,depth,0,0,TRUE,FALSE,NA
+butterfish,sst,0.006,0.035,TRUE,FALSE,NA
+butterfish,bt,0.033,0.038,TRUE,FALSE,NA
+butterfish,lat,0.766,0.912,FALSE,FALSE,NA
+butterfish,lon,0.893,0.652,FALSE,FALSE,NA
+butterfish,depth,0.062,0.034,TRUE,TRUE,+
+chain dogfish,sst,0.048,0.168,FALSE,TRUE,-
+chain dogfish,bt,0.005,0.003,TRUE,FALSE,NA
+chain dogfish,lat,0,0.001,TRUE,FALSE,NA
+chain dogfish,lon,0,0.012,TRUE,FALSE,NA
+chain dogfish,depth,0.015,0.008,TRUE,FALSE,NA
+cusk,sst,0.004,0.001,TRUE,FALSE,NA
+cusk,bt,0,0,TRUE,FALSE,NA
+cusk,lat,0.033,0.024,TRUE,FALSE,NA
+cusk,lon,0.007,0.002,TRUE,FALSE,NA
+cusk,depth,0.4,0.246,FALSE,FALSE,NA
+fawn cusk-eel,sst,0.005,0.032,TRUE,FALSE,NA
+fawn cusk-eel,bt,0,0,TRUE,FALSE,NA
+fawn cusk-eel,lat,0.181,0.675,FALSE,FALSE,NA
+fawn cusk-eel,lon,0.561,0.666,FALSE,FALSE,NA
+fawn cusk-eel,depth,0,0,TRUE,FALSE,NA
+fourbeard rockling,sst,0.002,0.001,TRUE,FALSE,NA
+fourbeard rockling,bt,0.002,0.001,TRUE,FALSE,NA
+fourbeard rockling,lat,0.008,0.003,TRUE,FALSE,NA
+fourbeard rockling,lon,0.001,0,TRUE,FALSE,NA
+fourbeard rockling,depth,0,0,TRUE,FALSE,NA
+fourspot flounder,sst,0.002,0.009,TRUE,FALSE,NA
+fourspot flounder,bt,0,0.001,TRUE,FALSE,NA
+fourspot flounder,lat,0.497,0.715,FALSE,FALSE,NA
+fourspot flounder,lon,0.028,0.036,TRUE,FALSE,NA
+fourspot flounder,depth,0,0,TRUE,FALSE,NA
+goosefish,sst,0.002,0.003,TRUE,FALSE,NA
+goosefish,bt,0,0,TRUE,FALSE,NA
+goosefish,lat,0.255,0.152,FALSE,FALSE,NA
+goosefish,lon,0.107,0.058,FALSE,FALSE,NA
+goosefish,depth,0.003,0.002,TRUE,FALSE,NA
+gulf stream flounder,sst,0,0.009,TRUE,FALSE,NA
+gulf stream flounder,bt,0.036,0.067,FALSE,TRUE,-
+gulf stream flounder,lat,0.324,0.569,FALSE,FALSE,NA
+gulf stream flounder,lon,0.002,0.383,FALSE,TRUE,-
+gulf stream flounder,depth,0.001,0,TRUE,FALSE,NA
+haddock,sst,0.001,0,TRUE,FALSE,NA
+haddock,bt,0,0,TRUE,FALSE,NA
+haddock,lat,0.082,0.088,FALSE,FALSE,NA
+haddock,lon,0.028,0.012,TRUE,FALSE,NA
+haddock,depth,0.513,0.385,FALSE,FALSE,NA
+jonah crab,sst,0.327,0.412,FALSE,FALSE,NA
+jonah crab,bt,0.253,0.156,FALSE,FALSE,NA
+jonah crab,lat,0.009,0.004,TRUE,FALSE,NA
+jonah crab,lon,0.304,0.156,FALSE,FALSE,NA
+jonah crab,depth,0.074,0.036,TRUE,TRUE,+
+little skate,sst,0,0,TRUE,FALSE,NA
+little skate,bt,0.005,0.003,TRUE,FALSE,NA
+little skate,lat,0,0,TRUE,FALSE,NA
+little skate,lon,0.002,0.017,TRUE,FALSE,NA
+little skate,depth,0.215,0.142,FALSE,FALSE,NA
+longfin squid,sst,0.021,0.049,TRUE,FALSE,NA
+longfin squid,bt,0.001,0,TRUE,FALSE,NA
+longfin squid,lat,0.846,0.719,FALSE,FALSE,NA
+longfin squid,lon,0.427,0.206,FALSE,FALSE,NA
+longfin squid,depth,0,0,TRUE,FALSE,NA
+longhorn sculpin,sst,0.005,0.003,TRUE,FALSE,NA
+longhorn sculpin,bt,0,0,TRUE,FALSE,NA
+longhorn sculpin,lat,0,0,TRUE,FALSE,NA
+longhorn sculpin,lon,0.191,0.112,FALSE,FALSE,NA
+longhorn sculpin,depth,0.311,0.31,FALSE,FALSE,NA
+northern sand lance,sst,0.008,0.01,TRUE,FALSE,NA
+northern sand lance,bt,0.523,0.412,FALSE,FALSE,NA
+northern sand lance,lat,0.992,0.708,FALSE,FALSE,NA
+northern sand lance,lon,0.923,0.887,FALSE,FALSE,NA
+northern sand lance,depth,0.057,0.026,TRUE,TRUE,+
+northern searobin,sst,0.28,0.628,FALSE,FALSE,NA
+northern searobin,bt,0.673,0.908,FALSE,FALSE,NA
+northern searobin,lat,0,0,TRUE,FALSE,NA
+northern searobin,lon,0.017,0.034,TRUE,FALSE,NA
+northern searobin,depth,0.462,0.77,FALSE,FALSE,NA
+northern shortfin squid,sst,0.002,0.012,TRUE,FALSE,NA
+northern shortfin squid,bt,0.001,0,TRUE,FALSE,NA
+northern shortfin squid,lat,0.042,0.205,FALSE,TRUE,-
+northern shortfin squid,lon,0.363,0.782,FALSE,FALSE,NA
+northern shortfin squid,depth,0.007,0.002,TRUE,FALSE,NA
+ocean pout,sst,0.002,0.001,TRUE,FALSE,NA
+ocean pout,bt,0,0,TRUE,FALSE,NA
+ocean pout,lat,0.169,0.082,FALSE,FALSE,NA
+ocean pout,lon,0.114,0.08,FALSE,FALSE,NA
+ocean pout,depth,0.01,0.004,TRUE,FALSE,NA
+offshore hake,sst,0.008,0.139,FALSE,TRUE,-
+offshore hake,bt,0,0,TRUE,FALSE,NA
+offshore hake,lat,0.002,0.024,TRUE,FALSE,NA
+offshore hake,lon,0,0.07,FALSE,TRUE,-
+offshore hake,depth,0.486,0.55,FALSE,FALSE,NA
+pollock,sst,0.003,0.001,TRUE,FALSE,NA
+pollock,bt,0.004,0.001,TRUE,FALSE,NA
+pollock,lat,0,0.002,TRUE,FALSE,NA
+pollock,lon,0.374,0.663,FALSE,FALSE,NA
+pollock,depth,0.425,0.324,FALSE,FALSE,NA
+red hake,sst,0.008,0.007,TRUE,FALSE,NA
+red hake,bt,0.003,0.006,TRUE,FALSE,NA
+red hake,lat,0.072,0.034,TRUE,TRUE,+
+red hake,lon,0,0,TRUE,FALSE,NA
+red hake,depth,0,0,TRUE,FALSE,NA
+rosette skate,sst,0.29,0.593,FALSE,FALSE,NA
+rosette skate,bt,0.074,0.061,FALSE,FALSE,NA
+rosette skate,lat,0.029,0.025,TRUE,FALSE,NA
+rosette skate,lon,0.002,0.035,TRUE,FALSE,NA
+rosette skate,depth,0.016,0.009,TRUE,FALSE,NA
+scup,sst,0.651,0.797,FALSE,FALSE,NA
+scup,bt,0.942,0.52,FALSE,FALSE,NA
+scup,lat,0.004,0.003,TRUE,FALSE,NA
+scup,lon,0.001,0.001,TRUE,FALSE,NA
+scup,depth,0.213,0.113,FALSE,FALSE,NA
+sea raven,sst,0.012,0.007,TRUE,FALSE,NA
+sea raven,bt,0,0,TRUE,FALSE,NA
+sea raven,lat,0.006,0.009,TRUE,FALSE,NA
+sea raven,lon,0.002,0.001,TRUE,FALSE,NA
+sea raven,depth,0.001,0.001,TRUE,FALSE,NA
+sea scallop,sst,0.14,0.171,FALSE,FALSE,NA
+sea scallop,bt,0.241,0.131,FALSE,FALSE,NA
+sea scallop,lat,0.04,0.039,TRUE,FALSE,NA
+sea scallop,lon,0.017,0.007,TRUE,FALSE,NA
+sea scallop,depth,0.478,0.616,FALSE,FALSE,NA
+silver hake,sst,0.03,0.027,TRUE,FALSE,NA
+silver hake,bt,0.058,0.071,FALSE,FALSE,NA
+silver hake,lat,0,0,TRUE,FALSE,NA
+silver hake,lon,0.001,0,TRUE,FALSE,NA
+silver hake,depth,0.029,0.014,TRUE,FALSE,NA
+smooth dogfish,sst,0.978,0.965,FALSE,FALSE,NA
+smooth dogfish,bt,0.318,0.41,FALSE,FALSE,NA
+smooth dogfish,lat,0.004,0.002,TRUE,FALSE,NA
+smooth dogfish,lon,0.003,0.002,TRUE,FALSE,NA
+smooth dogfish,depth,0.039,0.034,TRUE,FALSE,NA
+smooth skate,sst,0.005,0.003,TRUE,FALSE,NA
+smooth skate,bt,0,0,TRUE,FALSE,NA
+smooth skate,lat,0.058,0.043,TRUE,TRUE,+
+smooth skate,lon,0.1,0.079,FALSE,FALSE,NA
+smooth skate,depth,0.007,0.003,TRUE,FALSE,NA
+spiny dogfish,sst,0.001,0,TRUE,FALSE,NA
+spiny dogfish,bt,0.001,0.003,TRUE,FALSE,NA
+spiny dogfish,lat,0.178,0.165,FALSE,FALSE,NA
+spiny dogfish,lon,0.479,0.363,FALSE,FALSE,NA
+spiny dogfish,depth,0.036,0.016,TRUE,FALSE,NA
+spotted hake,sst,0.138,0.462,FALSE,FALSE,NA
+spotted hake,bt,0.048,0.025,TRUE,FALSE,NA
+spotted hake,lat,0.093,0.05,TRUE,TRUE,+
+spotted hake,lon,0.003,0.039,TRUE,FALSE,NA
+spotted hake,depth,0.002,0.001,TRUE,FALSE,NA
+summer flounder,sst,0.02,0.12,FALSE,TRUE,-
+summer flounder,bt,0.011,0.08,FALSE,TRUE,-
+summer flounder,lat,0,0,TRUE,FALSE,NA
+summer flounder,lon,0.002,0.004,TRUE,FALSE,NA
+summer flounder,depth,0.001,0,TRUE,FALSE,NA
+thorny skate,sst,0.001,0,TRUE,FALSE,NA
+thorny skate,bt,0.001,0,TRUE,FALSE,NA
+thorny skate,lat,0.035,0.073,FALSE,TRUE,-
+thorny skate,lon,0.674,0.769,FALSE,FALSE,NA
+thorny skate,depth,0.175,0.174,FALSE,FALSE,NA
+white hake,sst,0.006,0.003,TRUE,FALSE,NA
+white hake,bt,0,0,TRUE,FALSE,NA
+white hake,lat,0.008,0.003,TRUE,FALSE,NA
+white hake,lon,0.024,0.01,TRUE,FALSE,NA
+white hake,depth,0.427,0.22,FALSE,FALSE,NA
+windowpane,sst,0,0,TRUE,FALSE,NA
+windowpane,bt,0.002,0.001,TRUE,FALSE,NA
+windowpane,lat,0.001,0.002,TRUE,FALSE,NA
+windowpane,lon,0,0.004,TRUE,FALSE,NA
+windowpane,depth,0.032,0.149,FALSE,TRUE,-
+winter flounder,sst,0.019,0.014,TRUE,FALSE,NA
+winter flounder,bt,0.002,0.003,TRUE,FALSE,NA
+winter flounder,lat,0.006,0.003,TRUE,FALSE,NA
+winter flounder,lon,0.087,0.071,FALSE,FALSE,NA
+winter flounder,depth,0.004,0.002,TRUE,FALSE,NA
+winter skate,sst,0.001,0.001,TRUE,FALSE,NA
+winter skate,bt,0,0,TRUE,FALSE,NA
+winter skate,lat,0,0,TRUE,FALSE,NA
+winter skate,lon,0.086,0.208,FALSE,FALSE,NA
+winter skate,depth,0.03,0.013,TRUE,FALSE,NA
+witch flounder,sst,0,0,TRUE,FALSE,NA
+witch flounder,bt,0,0,TRUE,FALSE,NA
+witch flounder,lat,0.032,0.025,TRUE,FALSE,NA
+witch flounder,lon,0.77,0.782,FALSE,FALSE,NA
+witch flounder,depth,0,0,TRUE,FALSE,NA
+yellowtail flounder,sst,0.013,0.021,TRUE,FALSE,NA
+yellowtail flounder,bt,0.026,0.024,TRUE,FALSE,NA
+yellowtail flounder,lat,0.001,0,TRUE,FALSE,NA
+yellowtail flounder,lon,0.96,0.758,FALSE,FALSE,NA
+yellowtail flounder,depth,0.271,0.283,FALSE,FALSE,NA

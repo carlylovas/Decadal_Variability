@@ -1,6 +1,5 @@
 ## Addressing reviewers comments on strata sampling efforts
-# read in ("Data/annual_averages.csv)
-
+# read in annual_averages <- read.csv("Data/decadal_averages.csv")
 annual_averages <- annual_averages %>% 
   mutate(group = ifelse(est_year < 2010, 
                         "1970-2009", 
@@ -276,13 +275,13 @@ changers_means <- annual_averages %>%
 write_csv(changers_means, "changers_means.csv")
 
 # read back in for directionality
-changers_means <-read_csv("changers_means.csv")
+changers_means <-read_csv("Temp_Results/Revised/changers_means.csv")
 
 significant_changers <- changers %>%
   select(!direction) %>%
   full_join(changers_means) %>%
   filter(significant_change == "TRUE")
-write_csv(significant_changers, "significant_changers.csv")
+write_csv(significant_changers, "Temp_Results/Revised/significant_changers.csv")
 
 significant_changers %>%
   filter(revised >= 0.05)
