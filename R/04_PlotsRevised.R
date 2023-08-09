@@ -121,7 +121,7 @@ for(i in 1:49){
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(lon)[i]))+
+    ggtitle(toupper(names(sst)[i]))+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_sst)), color="#00608A", linewidth=0.75)+
     geom_line(data=group2, aes(x=est_year, y=as.numeric(overall_sst)), color="#EA4F12", linewidth=0.75)
 }
@@ -153,13 +153,13 @@ for(i in 1:49){
     mutate(overall_bt = map(data, possibly(avg_bt, NA)))%>%
     unnest(data)
   
-  sst[[i]]<- ggplot(data=loop_df, aes(x=est_year, y=avg_bot_temp))+
+  bt[[i]]<- ggplot(data=loop_df, aes(x=est_year, y=avg_bot_temp))+
     geom_line(color = "#E9E9E9", linewidth = 0.5)+
     geom_point(size=0.5)+
     theme_gmri(axis.title = element_blank(),
                plot.title = element_text(size = 11),
                axis.text.y = element_text(size=10))+
-    ggtitle(toupper(names(lon)[i]))+
+    ggtitle(toupper(names(bt)[i]))+
     geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_bt)), color="#00608A", linewidth=0.75)+
     geom_line(data=group2, aes(x=est_year, y=as.numeric(overall_bt)), color="#EA4F12", linewidth=0.75)
 }
@@ -191,17 +191,17 @@ for(i in 1:49){
     nest()%>%
     mutate(overall_depth = map(data, possibly(mean_depth, NA)))%>%
     unnest(data)
-
+  
   depth[[i]]<- ggplot(data=loop_df, aes(x=est_year, y=avg_depth))+
-  geom_line(color = "#E9E9E9", linewidth = 0.5)+
-  geom_point(size=0.5)+
-  theme_gmri(axis.title = element_blank(),
-             plot.title = element_text(size = 11),
-             axis.text.y = element_text(size=10))+
-  ggtitle("Average Depth")+
-  scale_y_reverse()+
-  geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_depth)), color="#00608A", linewidth=0.75)+
-  geom_line(data=group3, aes(x=est_year, y=as.numeric(overall_depth)), color="#EA4F12", linewidth=0.75)
+    geom_line(color = "#E9E9E9", linewidth = 0.5)+
+    geom_point(size=0.5)+
+    theme_gmri(axis.title = element_blank(),
+               plot.title = element_text(size = 11),
+               axis.text.y = element_text(size=10))+
+    ggtitle(toupper(names(depth)[i]))+
+    scale_y_reverse()+
+    geom_line(data=group1, aes(x=est_year, y=as.numeric(overall_depth)), color="#00608A", linewidth=0.75)+
+    geom_line(data=group2, aes(x=est_year, y=as.numeric(overall_depth)), color="#EA4F12", linewidth=0.75)
 }
 
 ###print plots alphabetically in multipage layouts
@@ -234,12 +234,15 @@ ggsave("depth_multipanel_v3.pdf", species_depth, height = 15, width = 12.5, unit
 #MOVERS MAP
 movers<-read_csv("Data/movers.csv", col_names=FALSE)
 movers<-movers%>%
-  rename("comname" = "X1") 
+  rename("comname" = "X1")
+cap_names<-capitalize(movers$comname)
+legend<-movers%>%
+  cbind(cap_names)%>%
+  select(cap_names)%>%
+  rename("Common Name" = "cap_names")
 
-#map legend
-legend<-ggtexttable((movers%>%
-                       select(comname)%>%
-                       rename("Common Name" = "comname")%>%
+#map legend 
+legend<-ggtexttable((legend%>%
                        distinct()),
                     theme= ttheme(base_size = 8))
 print(legend)
@@ -275,6 +278,14 @@ movers<-movers%>%
 mover_names<-movers%>%
   filter(group == "group_2")
 
+cap_names<-capitalize(mover_names$comname)
+
+legend<-mover_names%>%
+  cross_join(cap_names, copy=TRUE)%>%
+  select(y, pairs)%>%
+  rename("Common Name" = "y")%>%
+  select(!comname)
+
 #map
 world <- ne_countries(scale = "medium", returnclass = "sf")
 movement<-ggplot(data=world)+
@@ -307,3 +318,66 @@ print(movement_no_labels)
 ggsave("movement_noLabels.png", movement_no_labels, height = 10, width = 10, units="in")
 
 #grid.arrange(movement, legend, ncol = 3, layout_matrix =cbind(1,1,2))
+
+#species decadal maps
+map_data<-rev_data%>%
+  unnest(data)%>%
+  select(comname, est_year, data)%>%
+  unnest(data)%>%
+  group_by(comname)
+
+#maps####
+#with season
+map_df<-map_data%>%
+  group_by(comname)%>%
+  nest()
+nrow(map_df)
+maps<-vector("list",length=49)
+names(maps)=paste(unique(map_df$comname))
+
+
+for(i in 1:49){
+  print(i)
+  loop_df<-map_df[i,]%>%
+    unnest(data)%>%
+    group_by(comname)
+  
+  maps[[i]]<-ggplot(data=world)+
+    geom_sf()+
+    coord_sf(xlim=c(-80, -65), ylim=c(30,47))+
+    geom_point(data=loop_df, aes(x=avg_lon,y=avg_lat, color=season))+
+    theme_gmri()+
+    ggtitle(toupper(names(maps)[i]))+
+    ylab("Center of Latitude")+
+    xlab("Center of Longitude")+
+    scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66)) +
+    facet_wrap(~decade, ncol=5)
+}
+
+species_maps<-marrangeGrob(maps, layout_matrix = matrix(1:3,  nrow = 3, ncol=1, byrow=TRUE), top=NULL)
+ggsave("species_maps.pdf", species_maps, height = 15, width = 12.5, units ="in")
+
+#season averaged over year
+decade_maps<-vector("list",length=49)
+names(decade_maps)=paste(unique(rev_data$comname))
+
+for(i in 1:49){
+  print(i)
+  loop_df<-rev_data[i,]%>%
+    unnest(data)%>%
+    group_by(comname)%>%
+    mutate(decade =10*est_year %/% 10)
+  
+  decade_maps[[i]]<-ggplot(data=world)+
+    geom_sf()+
+    coord_sf(xlim=c(-80, -65), ylim=c(30,47))+
+    geom_point(data=loop_df, aes(x=avg_lon,y=avg_lat), color="#00736D", size = 0.75)+
+    theme_gmri()+
+    ggtitle(toupper(names(maps)[i]))+
+    ylab("Center of Latitude")+
+    xlab("Center of Longitude")+
+    scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66)) +
+    facet_wrap(~decade, ncol=5)
+}
+decade_species_maps<-marrangeGrob(decade_maps, layout_matrix = matrix(1:4,  nrow = 4, ncol=1, byrow=TRUE), top=NULL)
+ggsave("decade_species_maps.pdf", decade_species_maps, height = 15, width = 12.5, units ="in")

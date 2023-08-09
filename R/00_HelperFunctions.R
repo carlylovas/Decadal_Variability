@@ -129,10 +129,10 @@ get_survdat_tows <- function(survdat_clean) {
 ###Stat functions
 ##Mapping functions
 #MEANS
-avg_sst<-function(df){
+mean_sst<-function(df){
   mean(df$avg_sur_temp, na.rm=T)
 }
-avg_bt<-function(df){
+mean_bt<-function(df){
   mean(df$avg_bot_temp, na.rm=T)
 }
 mean_depth<-function(df){

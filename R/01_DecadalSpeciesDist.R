@@ -55,14 +55,14 @@ species<-tolower(species$comname)
 
 dec_data<-weighted_data%>%
   select(comname, est_year, season, avg_depth, avg_bot_temp, avg_sur_temp, avg_lat, avg_lon)%>%
+  filter(!est_year == 2017) %>%  # 8/05 revision
   mutate(decade = 10*est_year %/% 10)%>%
   group_by(comname, season)%>%
   nest()%>%
-  filter(comname %in% species)
+  filter(comname %in% species_list$comname)
 
 dec_data<-dec_data%>% 
   filter(!comname %in% c("atlantic croaker",
-                         "atlantic hagfish",
                          "barndoor skate",
                          "horseshoe crab",
                          "northern kingfish",
@@ -78,21 +78,23 @@ obs_by_season<-dec_data%>%
 write.csv(obs_by_season, here("Temp_Results", "obs_by_season.csv"))
 
 ##aggregated averages
-test<-dec_data%>%
+dec_data <-dec_data%>%
   unnest(data)%>%
   group_by(comname, est_year)%>%
-  nest()
-
-test<-test%>%
+  nest() %>%
   mutate( avg_depth       = as.numeric(map(data, possibly(mean_depth, NA))),
           avg_bot_temp    = as.numeric(map(data, possibly(avg_bt, NA))),
           avg_sur_temp    = as.numeric(map(data, possibly(avg_sst, NA))),
           avg_lat         = as.numeric(map(data, possibly(mean_lat, NA))),
-          avg_lon         = as.numeric(map(data, possibly(mean_lon, NA))))
-
-test<-test%>%
+          avg_lon         = as.numeric(map(data, possibly(mean_lon, NA)))) %>%
   group_by(comname)%>%
   nest()
+
+# save out csv for Kathy
+annual_averages <- dec_data %>%
+  unnest(data) %>%
+  select(!data)
+write_csv(annual_averages, "decadal_averages.csv")
 
 ###save test to use in 02_DecadalPlots.R
 saveRDS(test, file = here("Data", "plot_data.rds"))

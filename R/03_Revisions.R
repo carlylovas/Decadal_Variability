@@ -381,7 +381,7 @@ welch.T.revised<-rev.stats%>%
   relocate(welch_bt_p, .after=bart_bt_p)%>%
   relocate(welch_depth_p, .after=bart_depth_p)%>%
   relocate(welch_lat_p, .after=bart_lat_p)%>%
-  relocate(welch_lon_p, .after=bart_lon_p)%>%
+  relocate(welch_lon_p, .after=bart_lon_p) #%>%
   mutate(across(where(is.numeric), round, 3))
 
 ##means
