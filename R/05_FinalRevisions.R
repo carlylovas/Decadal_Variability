@@ -1,6 +1,7 @@
 ## Addressing reviewers comments on strata sampling efforts
 # read in annual_averages <- read.csv("Data/decadal_averages.csv")
 annual_averages <- annual_averages %>% 
+  filter(!est_year == "2017") %>%
   mutate(group = ifelse(est_year < 2010, 
                         "1970-2009", 
                         "2010-2019")) %>%
@@ -33,7 +34,7 @@ strata_effort <- strata_effort %>%
   unnest(data) %>% 
   drop_na() %>%
   filter(!est_year == "2017") %>%
-  filter(!est_year == "2018") %>%
+  #filter(!est_year == "2018") %>%
   filter(est_year %in% c(1970:2019)) %>% 
   mutate(group = ifelse(est_year < 2010, 
                          "1970-2009", 
@@ -103,185 +104,348 @@ avg_strata_plot <- strata_effort %>%
   theme_gmri()
 ggsave("avg_effort_plot.png", avg_strata_plot, height = 8.5, width = 11, units = "in", bg = "white")
 
+# Histograms #### 
+write.csv(survey_tows, "survey_tows.csv")
+group1 <- survey_tows %>%
+  filter(est_year %in% seq("1970", "2009")) %>%
+  ggplot() +
+  geom_histogram(aes(x=decdeg_beglat))+
+  ggtitle("1970-2009")
 
-# re-run t-test for all parameters
-# trying Adam's code for center of lat
+group2 <-survey_tows %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  ggplot() +
+  geom_histogram(aes(x=decdeg_beglat))+
+  ggtitle("2010-2019")
 
-lat_test_data <- annual_averages %>%
+group2_no17 <- survey_tows %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year == "2017") %>%
+  ggplot() +
+  geom_histogram(aes(x=decdeg_beglat)) +
+  ggtitle("2010-2016, 2018-2019")
+
+group2_no17_18 <- survey_tows %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year == c("2017", "2018")) %>%
+  ggplot() +
+  geom_histogram(aes(x=decdeg_beglat)) +
+  ggtitle("2010-2016, 2019")
+
+plot <- (ggarrange(group1, group2, group2_no17, group2_no17_18, ncol = 2, nrow =2))
+plot <- annotate_figure(plot, top = text_grob("Latitude"))
+
+# plotting loop ?
+group1 <- survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("1970", "2009")) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white") +
+  facet_wrap(~variable, scales = "free_x") +
+  ggtitle("1970-2009")
+
+group2 <- survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white") +
+  facet_wrap(~variable, scales = "free_x") +
+  ggtitle("2010-2019")
+
+group2_no17 <- survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year == "2017") %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white") +
+  facet_wrap(~variable, scales = "free_x") +
+  ggtitle("2010-2016, 2018-2019")
+
+group2_no17_18 <- survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year %in% c("2017", "2018")) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white") +
+  facet_wrap(~variable, scales = "free_x") +
+  ggtitle("2010-2016, 2019")
+
+print(group1)
+print(group2)
+print(group2_no17)
+print(group2_no17_18)
+
+ggsave("1970-2009_hist.png", group1)
+ggsave("2010-2019_hist.png", group2)
+ggsave("2010-2019_no17_hist.png", group2_no17)
+ggsave("2010-2019_no17-18_hist.png", group2_no17_18)
+
+# hist()
+survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year %in% c("2017", "2018")) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white") +
+  facet_wrap(~variable, scales = "free") +
+  ggtitle("2010-2016, 2019")
+
+# create nested data frame to optimize t-testing and plotting
+group1 <- survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("1970", "2009")) %>%
+  mutate(group = "1970-2009") %>%
+  select(!c(svvessel)) %>%
+  group_by(group) %>%
+  nest(lat   = decdeg_beglat,
+       lon   = decdeg_beglon,
+       depth = avgdepth,
+       sst   = surftemp,
+       bt    = bottemp)
+
+group2 <-  survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  mutate(group = "2010-2019") %>%
+  select(!c(svvessel)) %>%
+  group_by(group) %>%
+  nest(lat   = decdeg_beglat,
+       lon   = decdeg_beglon,
+       depth = avgdepth,
+       sst   = surftemp,
+       bt    = bottemp)
+
+group3 <-  survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010","2019")) %>%
+  filter(!est_year == "2017") %>%
+  mutate(group = "!2017") %>%
+  select(!c(svvessel)) %>%
+  group_by(group) %>%
+  nest(lat   = decdeg_beglat,
+       lon   = decdeg_beglon,
+       depth = avgdepth,
+       sst   = surftemp,
+       bt    = bottemp)
+
+group4 <-  survey_tows %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth) %>%
+  filter(est_year %in% seq("2010", "2019")) %>%
+  filter(!est_year %in% c("2017", "2018")) %>%
+  mutate(group = "!2017-2018") %>%
+  select(!c(svvessel)) %>%
+  group_by(group) %>%
+  nest(lat   = decdeg_beglat,
+       lon   = decdeg_beglon,
+       depth = avgdepth,
+       sst   = surftemp,
+       bt    = bottemp)
+
+df <- group1 %>%
+  rbind(group2) %>%
+  rbind(group3) %>%
+  rbind(group4) %>%
+  group_by(group) %>%
+  nest()
+
+###########
+# T testing 
+# 1970-2009 vs 2010-2019 
+t.test.1 <- df %>%
+  filter(group %in% c("1970-2009", "2010-2019")) %>%
   unnest(data) %>%
-  select(comname, est_year, avg_lat, group)
-
-lat_test_data %>%
-  split(.$comname) %>% 
-  map_dfr(function(x){
-    t.test(avg_lat ~ group, data = x) %>% 
+  unnest(lat:bt) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>% 
+  group_by(variable) %>%
+  nest() %>% 
+  mutate(t.test = map(data, function(x){
+    t.test(measurement ~ group, data = x) %>% 
       tidy() %>% 
       select(
-        lat_1970to2009 = estimate1, 
-        lat_2010to2019 = estimate2, 
+        estimate1, 
+        estimate2, 
         method, 
         p.value) %>% 
       mutate(different = ifelse(p.value <= 0.05, T, F))
-  }, .id = "comname")
+  }))
+  
+t.test.1 %>% select(!data) %>%
+  unnest(t.test)
 
-# compare with original 
-rev_t_test %>%
-  select(comname, est_year, avg_lat, group) %>%
-  split(.$comname) %>% 
-  map_dfr(function(x){
-    t.test(avg_lat ~ group, data = x) %>% 
+# 1970-2009 vs 2010-2016, 2018-2019
+t.test.2 <- df %>%
+  filter(group %in% c("1970-2009", "!2017")) %>%
+  unnest(data) %>%
+  unnest(lat:bt) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>% 
+  group_by(variable) %>%
+  nest %>%
+  mutate(t.test = map(data, function(x){
+    t.test(measurement ~ group, data = x) %>% 
       tidy() %>% 
       select(
-        lat_1970to2009 = estimate1, 
-        lat_2010to2019 = estimate2, 
+        estimate1, 
+        estimate2, 
         method, 
         p.value) %>% 
       mutate(different = ifelse(p.value <= 0.05, T, F))
-  }, .id = "comname") # this matches 
+  }))
 
-# using original code to calculate quickly and comparatively (although messier) ####
-revised_welch <- annual_averages %>%
-mutate(num_obs      = map(data, possibly(count, NA)))%>%
-  mutate(bart_sst     = map(data, possibly(bart_sst, NA)),
-         bart_bt      = map(data, possibly(bart_bt, NA)),
-         bart_depth   = map(data, possibly(bart_depth, NA)),
-         bart_lat     = map(data, possibly(bart_lat, NA)),
-         bart_lon     = map(data, possibly(bart_lon, NA)))%>%
-  mutate(welch_sst    = map(data, possibly(welch_sst, NA)),
-         welch_bt     = map(data, possibly(welch_bt,NA)),
-         welch_depth  = map(data, possibly(welch_depth, NA)),
-         welch_lat    = map(data, possibly(welch_lat, NA)),
-         welch_lon    = map(data, possibly(welch_lon, NA)))%>%
-  mutate(tidy_bart_sst     = map(bart_sst,   broom::tidy),
-         tidy_bart_bt      = map(bart_bt,    broom::tidy),
-         tidy_bart_depth   = map(bart_depth, broom::tidy),
-         tidy_bart_lat     = map(bart_lat,   broom::tidy),
-         tidy_bart_lon     = map(bart_lon,   broom::tidy))%>%
-  mutate(tidy_welch_sst     = map(welch_sst,   broom::tidy),
-         tidy_welch_bt      = map(welch_bt,    broom::tidy),
-         tidy_welch_depth   = map(welch_depth, broom::tidy),
-         tidy_welch_lat     = map(welch_lat,   broom::tidy),
-         tidy_welch_lon     = map(welch_lon,   broom::tidy))%>%
-  mutate(bart_sst_p        = map(tidy_bart_sst,   p),
-         bart_bt_p         = map(tidy_bart_bt,    p),
-         bart_depth_p      = map(tidy_bart_depth, p),
-         bart_lat_p        = map(tidy_bart_lat,   p),
-         bart_lon_p        = map(tidy_bart_lon,   p))%>%
-  mutate(welch_sst_p       = map(tidy_welch_sst, p),
-         welch_bt_p        = map(tidy_welch_bt, p),
-         welch_depth_p     = map(tidy_welch_depth, p),
-         welch_lat_p       = map(tidy_welch_lat, p),
-         welch_lon_p       = map(tidy_welch_lon, p))%>%
-  nest(bartlett_test  = c(bart_sst:bart_lon),
-       welch_t_test   = c(welch_sst:welch_lon),
-       tidy           = c(tidy_bart_sst:tidy_welch_lon),
-       bart_p_values  = c(bart_sst_p:bart_lon_p),
-       welch_p_values = c(welch_sst_p:welch_lon_p)) %>%
-  unnest(c(bart_p_values, welch_p_values))%>%
-  drop_na()%>%
-  summarise(bart_sst_p        = as.numeric(bart_sst_p),
-         welch_sst_p       = as.numeric(welch_sst_p),
-         bart_bt_p         = as.numeric(bart_bt_p),
-         welch_bt_p        = as.numeric(welch_bt_p),
-         bart_depth_p      = as.numeric(bart_depth_p),
-         welch_depth_p     = as.numeric(welch_depth_p),
-         bart_lat_p        = as.numeric(bart_lat_p),
-         welch_lat_p       = as.numeric(welch_lat_p),
-         bart_lon_p        = as.numeric(bart_lon_p),
-         welch_lon_p       = as.numeric(welch_lon_p))%>%
-  relocate(welch_sst_p, .after =bart_sst_p)%>%
-  relocate(welch_bt_p, .after=bart_bt_p)%>%
-  relocate(welch_depth_p, .after=bart_depth_p)%>%
-  relocate(welch_lat_p, .after=bart_lat_p)%>%
-  relocate(welch_lon_p, .after=bart_lon_p) #%>%
-  mutate(across(where(is.numeric), round, 3))
+t.test.2 %>%
+  select(!data) %>%
+  unnest(t.test)
 
-write_csv(revised_welch, "revised_ttest_values_no2017.csv") 
-
-# means
-means <- annual_averages %>% 
+# 1970-2009 vs 2010-2016, 2019
+t.test.3 <- df %>%
+  filter(group %in% c("1970-2009", "!2017-2018")) %>%
   unnest(data) %>%
-  group_by(comname, group) %>%
+  unnest(lat:bt) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>% 
+  group_by(variable) %>%
   nest() %>%
-  summarise(mean_sst   = as.numeric(map(data, avg_sst)),
-       mean_bt    = as.numeric(map(data, avg_bt)),
-       mean_depth = as.numeric(map(data, mean_depth)),
-       mean_lat   = as.numeric(map(data, mean_lat)),
-       mean_lon   = as.numeric(map(data, mean_lon)))
-write_csv(means, "revised_means_no2017.csv")
+  mutate(t.test = map(data, function(x){
+    t.test(measurement ~ group, data = x) %>% 
+      tidy() %>% 
+      select(
+        estimate1, 
+        estimate2, 
+        method, 
+        p.value) %>% 
+      mutate(different = ifelse(p.value <= 0.05, T, F))
+  }))
 
-# check for difference
-check_old <- welch.T.revised %>%
-  select(comname, welch_sst_p, welch_bt_p, welch_lat_p, welch_lon_p, welch_depth_p) %>%
-  ungroup() %>%
-  rename(sst   = welch_sst_p,
-         bt    = welch_bt_p,
-         depth = welch_depth_p,
-         lat   = welch_lat_p,
-         lon   = welch_lon_p) %>%
-  mutate(version = "original")
+t.test.3 %>% 
+  select(!data) %>%
+  unnest(t.test)
 
-check <- revised_welch %>% 
-  select(comname, welch_sst_p, welch_bt_p, welch_lat_p, welch_lon_p, welch_depth_p) %>%
-  ungroup() %>%
-  rename(sst  = welch_sst_p,
-         bt   = welch_bt_p,
-         depth = welch_depth_p,
-         lat   = welch_lat_p,
-         lon   = welch_lon_p) %>%
-  mutate(version = "revised")
+## Re-run species distributions without stratum 16 (1160)
+survey_no16 <- clean_survey %>%
+  filter(!stratum == "1160")
 
-check <- check %>%
-  rbind(check_old) %>%
-  pivot_longer(cols= 2:6, names_to = "variable", values_to = "p-value") %>%
-  pivot_wider(names_from = "version", values_from = "p-value")
+strata16_data <- grouped_center_bio(survey_no16, est_year, season) %>%
+  mutate(decade = 10*est_year %/% 10)
 
-check <- check  %>%
-  mutate(significant = ifelse((revised & original <= 0.05), T, F)) %>%
-  mutate(across(where(is.numeric), round, 3)) %>%
-  mutate(significant_change = (original >= 0.05 & revised <= 0.05 | original <= 0.05 & revised >= 0.05))
- #mutate(change = ifelse((revised != original), T, F))
-
-changers <- check %>%
-  filter(significant_change == "TRUE") %>%
-  mutate(direction = ifelse((revised > original), "+", "-"))
-write_csv(changers, "changers.csv")
-
-change <- check %>%
-  left_join(changers)
-write_csv(change, "p_values_change.csv")
-
-# changers and their means 
-changers_means <- annual_averages %>%
-  filter(comname %in% changers$comname) %>%
-  unnest(data) %>%
-  group_by(comname, group) %>%
+revised_averages <- strata16_data %>%
+  select(comname, est_year, season, avg_depth, avg_bot_temp, avg_sur_temp, avg_lat, avg_lon)%>%
+  filter(!est_year == 2017) %>%
+  mutate(decade = 10*est_year %/% 10)%>%
+  filter(comname %in% species_list$comname) %>%
+  group_by(comname, est_year)%>%
   nest() %>%
-  summarise(sst   = map(data, mean_sst),
-            bt    = map(data, mean_bt),
-            depth = map(data, mean_depth),
-            lat   = map(data, mean_lat),
-            lon   = map(data, mean_lon)) %>%
-  pivot_longer(cols = sst:lon, names_to = "variable", values_to = "mean") %>%
-  mutate(mean = as.numeric(mean)) %>%
+  mutate( avg_depth       = as.numeric(map(data, possibly(mean_depth, NA))),
+          avg_bot_temp    = as.numeric(map(data, possibly(avg_bt, NA))),
+          avg_sur_temp    = as.numeric(map(data, possibly(avg_sst, NA))),
+          avg_lat         = as.numeric(map(data, possibly(mean_lat, NA))),
+          avg_lon         = as.numeric(map(data, possibly(mean_lon, NA)))) %>%
+  group_by(comname)%>%
+  nest()
+
+# t.test with Adam's code because of the stupid tidyverse update 
+t.test.revised <- revised_averages %>%
+  unnest(data) %>% 
+  mutate(group = ifelse(est_year < 2010, 
+                        "1970-2009", 
+                        "2010-2019")) %>%
+  select(!data) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  group_by(comname, variable) %>%
+  nest() %>%
+  mutate(t.test = map(data, function(x){
+    t.test(measurement ~ group, data = x) %>% 
+      tidy() %>% 
+      select(
+        estimate1970to2009 = estimate1, 
+        estimate2010to2019 = estimate2, 
+        method, 
+        p.value) %>% 
+      mutate(different = ifelse(p.value <= 0.05, T, F))
+  }))
+
+revised_no_stratum16 <- t.test.revised %>%
+  unnest(t.test) %>%
+  select(comname, variable, p.value, estimate1970to2009, estimate2010to2019) %>%
+  rename("revised" = "p.value",
+         "no_16_strata_1970_2009" = "estimate1970to2009",
+         "no_16_strata_2010_2019" = "estimate2010to2019") %>%
+  mutate(revised = as.numeric(revised))
+ 
+# compare these with previous results 
+  all_strata_t.test <- annual_averages %>%
+  unnest(data) %>% 
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  group_by(comname, variable) %>%
+  nest() %>%
+  mutate(t.test = map(data, function(x){
+    t.test(measurement ~ group, data = x) %>% 
+      tidy() %>% 
+      select(
+        estimate1970to2009 = estimate1, 
+        estimate2010to2019 = estimate2, 
+        method, 
+        p.value) %>% 
+      mutate(different = ifelse(p.value <= 0.05, T, F))
+  }))
+
+t.test.comparison <- all_strata_t.test %>%
+  unnest(t.test) %>%
+  select(comname, variable, p.value, estimate1970to2009, estimate2010to2019) %>%
+  rename("all_strata" = "p.value",
+         "all_strata_1970_2009" = "estimate1970to2009",
+         "all_strata_2010_2009" = "estimate2010to2019") %>%
+  mutate(all_strata = as.numeric(all_strata)) %>%
+  full_join(revised_no_stratum16) %>%
   mutate(across(where(is.numeric), round, 3)) %>%
-  pivot_wider(names_from = "group", values_from = "mean") %>%
-  rename("group1" = "1970-2009",
-         "group2" = "2010-2019") %>%
-  mutate(difference = (group2 - group1),
-         direction = ifelse((group1 < group2), "+", "-")) %>%
-  rename("1970-2009" = "group1",
-         "2010-2019" = "group2")
-write_csv(changers_means, "changers_means.csv")
+  mutate(change = ifelse((revised == all_strata), "No", "Yes"),
+         significant_change = ifelse((all_strata >= 0.05 & revised <= 0.05 | 
+                               all_strata <= 0.05 & revised >= 0.05), "True", "False")) %>%
+  relocate("all_strata", .after = "no_16_strata_2010_2019") %>%
+  relocate("revised", .after = "all_strata")
 
-# read back in for directionality
-changers_means <-read_csv("Temp_Results/Revised/changers_means.csv")
+# write out csv for Kathy
+write.csv(t.test.comparison, "Temp_Results/CSVs/strata_t_test_comparison.csv")
+write.csv((t.test.comparison %>%
+  filter(significant_change == "True")), "Temp_Results/CSVs/significant_changers!17.csv")
 
-significant_changers <- changers %>%
-  select(!direction) %>%
-  full_join(changers_means) %>%
-  filter(significant_change == "TRUE")
-write_csv(significant_changers, "Temp_Results/Revised/significant_changers.csv")
+# Histograms w/out strata 16
+no_strat16_hist <- get_survdat_tows(clean_survey %>% filter(!stratum == "1160")) %>%
+  filter(!est_year == "2017") %>%
+  mutate(group = ifelse(est_year < 2010, 
+                        "1970-2009", 
+                        "2010-2019"))
+no_strat16_hist <- no_strat16_hist %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth, group) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  group_by(variable) %>%
+  nest() %>%
+  mutate(plot = map2(data, variable, function(df, variable){
+    ggplot(data = df, aes(x = measurement)) +
+    geom_histogram(aes(y = after_stat(density)), color = "white") +
+    facet_wrap(~group, scales = "free_x") +
+    ggtitle(paste(variable))}))
 
-significant_changers %>%
-  filter(revised >= 0.05)
+no_strata_16_plot <- patchwork::wrap_plots(no_strat16_hist$plot[1:5], ncol = 2)
+ggsave("no_stratum_16.png", no_strata_16_plot, width = 11, height = 8.5, units = "in")
+
+# Histograms with 1160 but without 2017
+all_strata_hist <- survey_tows %>%
+  filter(!est_year == "2017") %>%
+  mutate(group = ifelse(est_year < 2010, 
+                        "1970-2009", 
+                        "2010-2019")) %>%
+  select(svvessel, est_year, decdeg_beglat, decdeg_beglon, surftemp, bottemp, avgdepth, group) %>%
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  group_by(variable) %>%
+  nest() %>%
+  mutate(plot = map2(data, variable, function(df, variable){
+    ggplot(data = df, aes(x = measurement)) +
+      geom_histogram(aes(y = after_stat(density)), color = "white") +
+      facet_wrap(~group, scales = "free_x") +
+      ggtitle(paste(variable))}))
+
+all_strata_plot <- patchwork::wrap_plots(all_strata_hist$plot[1:5], ncol = 2)
+ggsave("all_strata.png", all_strata_plot, width = 11, height = 8.5, units = "in")
