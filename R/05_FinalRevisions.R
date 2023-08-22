@@ -375,7 +375,7 @@ revised_no_stratum16 <- t.test.revised %>%
   mutate(revised = as.numeric(revised))
  
 # compare these with previous results 
-  all_strata_t.test <- annual_averages %>%
+all_strata_t.test <- annual_averages %>%
   unnest(data) %>% 
   pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
   group_by(comname, variable) %>%
@@ -391,6 +391,8 @@ revised_no_stratum16 <- t.test.revised %>%
       mutate(different = ifelse(p.value <= 0.05, T, F))
   }))
 
+write_rds(all_strata_t.test, "all_strata.RDS")
+  
 t.test.comparison <- all_strata_t.test %>%
   unnest(t.test) %>%
   select(comname, variable, p.value, estimate1970to2009, estimate2010to2019) %>%
