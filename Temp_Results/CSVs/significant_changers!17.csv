@@ -1,0 +1,7 @@
+"","comname","variable","all_strata_1970_2009","all_strata_2010_2009","no_16_strata_1970_2009","no_16_strata_2010_2019","all_strata","revised","change","significant_change"
+"1","american lobster","avg_depth",132.859,139.595,134.789,143.951,0.125,0.043,"Yes","True"
+"2","american lobster","avg_bot_temp",9.277,8.82,9.226,8.764,0.037,0.052,"Yes","True"
+"3","fourspot flounder","avg_lon",-70.691,-70.307,-70.847,-70.564,0.028,0.059,"Yes","True"
+"4","sea scallop","avg_lat",39.853,40.197,39.657,39.954,0.04,0.087,"Yes","True"
+"5","winter skate","avg_lon",-68.246,-68.553,-68.515,-68.92,0.086,0.01,"Yes","True"
+"6","yellowtail flounder","avg_bot_temp",7.96,8.521,7.819,8.223,0.026,0.124,"Yes","True"

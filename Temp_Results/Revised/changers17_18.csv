@@ -1,0 +1,31 @@
+comname,variable,revised,original,significant,significant_change,direction
+american lobster,bt,0.05,0.033,TRUE,TRUE,+
+american shad,sst,0.063,0.03,TRUE,TRUE,+
+atlantic hagfish,lon,0.073,0.016,TRUE,TRUE,+
+atlantic herring,sst,0.063,0.016,TRUE,TRUE,+
+atlantic herring,bt,0.051,0.016,TRUE,TRUE,+
+atlantic rock crab,sst,0.006,0.067,FALSE,TRUE,-
+atlantic rock crab,lon,0.048,0.085,FALSE,TRUE,-
+blackbelly rosefish,bt,0.081,0.026,TRUE,TRUE,+
+butterfish,depth,0.126,0.034,TRUE,TRUE,+
+cusk,lat,0.064,0.024,TRUE,TRUE,+
+fourspot flounder,lon,0.061,0.036,TRUE,TRUE,+
+gulf stream flounder,bt,0.048,0.067,FALSE,TRUE,-
+gulf stream flounder,lon,0.003,0.383,FALSE,TRUE,-
+haddock,lon,0.064,0.012,TRUE,TRUE,+
+jonah crab,depth,0.099,0.036,TRUE,TRUE,+
+northern sand lance,depth,0.071,0.026,TRUE,TRUE,+
+offshore hake,sst,0.016,0.139,FALSE,TRUE,-
+offshore hake,lon,0,0.07,FALSE,TRUE,-
+red hake,lat,0.137,0.034,TRUE,TRUE,+
+rosette skate,lat,0.062,0.025,TRUE,TRUE,+
+sea scallop,lat,0.06,0.039,TRUE,TRUE,+
+silver hake,sst,0.067,0.027,TRUE,TRUE,+
+smooth dogfish,depth,0.081,0.034,TRUE,TRUE,+
+smooth skate,lat,0.05,0.043,TRUE,TRUE,+
+spotted hake,bt,0.077,0.025,TRUE,TRUE,+
+spotted hake,lat,0.192,0.05,TRUE,TRUE,+
+summer flounder,sst,0.038,0.12,FALSE,TRUE,-
+summer flounder,bt,0.013,0.08,FALSE,TRUE,-
+winter flounder,lon,0.013,0.071,FALSE,TRUE,-
+winter skate,depth,0.066,0.013,TRUE,TRUE,+

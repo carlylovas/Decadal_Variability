@@ -1,0 +1,31 @@
+comname,variable,revised,original,1970-2009,2010-2019,difference,direction,revised_significance
+american lobster,bt,0.05,0.033,9.277,8.821,-0.456,colder,significant
+american shad,sst,0.063,0.03,9.464,10.826,1.362,warmer,insignificant
+atlantic hagfish,lon,0.073,0.016,-69.792,-69.271,0.521,eastward,insignificant
+atlantic herring,sst,0.063,0.016,8.861,9.751,0.89,warmer,insignificant
+atlantic herring,bt,0.051,0.016,6.583,7.488,0.905,warmer,insignificant
+atlantic rock crab,sst,0.006,0.067,12.686,14.02,1.334,warmer,significant
+atlantic rock crab,lon,0.048,0.085,-71.987,-71.359,0.628,eastward,significant
+blackbelly rosefish,bt,0.081,0.026,8.978,9.438,0.46,warmer,insignificant
+butterfish,depth,0.126,0.034,102.687,111.257,8.57,shallower,insignificant
+cusk,lat,0.064,0.024,42.648,42.466,-0.182,southward,insignificant
+fourspot flounder,lon,0.061,0.036,-70.691,-70.341,0.35,eastward,insignificant
+gulf stream flounder,bt,0.048,0.067,9.622,10.392,0.77,warmer,significant
+gulf stream flounder,lon,0.003,0.383,-70.799,-71.211,-0.412,westward,significant
+haddock,lon,0.064,0.012,-67.359,-67.653,-0.294,westward,insignificant
+jonah crab,depth,0.099,0.036,152.949,170.004,17.055,deeper,insignificant
+northern sand lance,depth,0.071,0.026,42.5,65.477,22.977,deeper,insignificant
+offshore hake,sst,0.016,0.139,14.335,16.742,2.407,warmer,significant
+offshore hake,lon,0,0.07,-71.548,-72.775,-1.227,westward,significant
+red hake,lat,0.137,0.034,41.517,41.746,0.229,northward,insignificant
+rosette skate,lat,0.062,0.025,37.652,37.956,0.304,northward,insignificant
+sea scallop,lat,0.06,0.039,39.853,40.195,0.342,northward,insignificant
+silver hake,sst,0.067,0.027,9.648,10.262,0.614,warmer,insignificant
+smooth dogfish,depth,0.081,0.034,79.639,97.953,18.314,deeper,insignificant
+smooth skate,lat,0.05,0.043,42.592,42.737,0.145,northward,significant
+spotted hake,bt,0.077,0.025,11.187,11.611,0.424,warmer,insignificant
+spotted hake,lat,0.192,0.05,37.885,38.113,0.228,northward,insignificant
+summer flounder,sst,0.038,0.12,12.483,13.216,0.733,warmer,significant
+summer flounder,bt,0.013,0.08,12.39,12.888,0.498,warmer,significant
+winter flounder,lon,0.013,0.071,-68.851,-68.514,0.337,eastward,significant
+winter skate,depth,0.066,0.013,61.962,71.23,9.268,deeper,insignificant
