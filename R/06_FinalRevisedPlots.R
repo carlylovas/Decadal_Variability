@@ -243,3 +243,63 @@ ggplot(data=world)+
              axis.title = element_blank(),
              axis.text = element_text(size = 12), 
              strip.text = element_text(size = 12))
+
+## Quadrant ####
+nontrackers <- all_strata %>%
+  ungroup(variable) %>%
+  select(comname) %>%
+  distinct() %>%
+  filter(comname %in% c("Acadian redfish", "American shad", "Atlantic rock crab", "Butterfish", "Northern sand lance")) %>%
+  mutate(Quad = "Non-trackers")
+effective <-  all_strata %>%
+  ungroup(variable) %>%
+  select(comname) %>%
+  distinct() %>%
+  filter(comname %in% c("American lobster", "Atlantic mackerel", "Black sea bass", "Blackbelly rosefish", "Jonah crab", 
+                        "Northern searobin", "Rosette skate", "Scup", "Sea scallop", "Smooth dogfish")) %>%
+  mutate(Quad = "Effective trackers")
+ineffective <- all_strata %>% 
+  ungroup(variable) %>%
+  select(comname) %>%
+  distinct() %>%
+  filter(!comname %in% c("Acadian redfish", "American shad", "Atlantic rock crab", "Butterfish", "Northern sand lance")) %>%
+  filter(!comname %in% c("American lobster", "Atlantic mackerel", "Black sea bass", "Blackbelly rosefish", "Jonah crab", 
+                        "Northern searobin", "Rosette skate", "Scup", "Sea scallop", "Smooth dogfish")) %>%
+  mutate(Quad = "Ineffective trackers")
+quad <- nontrackers %>%
+  full_join(effective) %>%
+  full_join(ineffective) %>%
+  arrange(comname)
+  
+# add to gt ?
+tab2 <- all_strata_gt %>%
+  full_join(quad) %>%
+  gt(groupname_col = NULL) %>%
+  tab_spanner(label = md("**Latitude (\u00B0N)**"), columns = c("avglat1970", "avglat2010", "avglatp")) %>%
+  tab_spanner(label = md("**Longitude (\u00B0W)**"), columns = c("avglon1970", "avglon2010", "avglonp")) %>%
+  tab_spanner(label = md("**Depth (m)**"), columns = c("avgdepth1970", "avgdepth2010", "avgdepthp")) %>%
+  tab_spanner(label = md("**Surface Temperature (\u00B0C)**"), columns = c("avgsst1970", "avgsst2010", "avgsstp")) %>%
+  tab_spanner(label = md("**Bottom Temperature (\u00B0C)**"), columns = c("avgbot1970", "avgbot2010", "avgbotp")) %>%
+  tab_spanner(label = md("**Classification**"), columns = "Quad") %>%
+  cols_label(
+    comname    = md("**Species**"),
+    avglat1970 = md("*1970-2009*"),
+    avglat2010 = md("*2010-2019*"),
+    avglatp    = md("*p*"),
+    avglon1970 = md("*1970-2009*"),
+    avglon2010 = md("*2010-2019*"),
+    avglonp    = md("*p*"),
+    avgdepth1970 = md("*1970-2009*"),
+    avgdepth2010 = md("*2010-2019*"),
+    avgdepthp    = md("*p*"),
+    avgsst1970 = md("*1970-2009*"),
+    avgsst2010 = md("*2010-2019*"),
+    avgsstp    = md("*p*"),
+    avgbot1970 = md("*1970-2009*"),
+    avgbot2010 = md("*2010-2019*"),
+    avgbotp    = md("*p*"),
+    Quad       = ("")) %>%
+  fmt_number(columns = everything(), decimals = 2) %>%
+  sub_missing(columns = everything(), rows = everything(), missing_text = "") %>%
+  tab_footnote(footnote = md("*2017 excluded from 2010-2019 means*"))
+gtsave(tab2, "Temp_Results/table1_w_movement_class.docx")
