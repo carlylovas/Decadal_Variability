@@ -33,7 +33,7 @@ strata_effort <- strata_effort %>%
   left_join(strata_check) %>%
   unnest(data) %>% 
   drop_na() %>%
-  filter(!est_year == "2017") %>%
+  #filter(!est_year == "2017") %>%
   #filter(!est_year == "2018") %>%
   filter(est_year %in% c(1970:2019)) %>% 
   mutate(group = ifelse(est_year < 2010, 
@@ -75,18 +75,25 @@ gtsave((strata_effort %>%
 # Plots
 all_strata_plot <- strata_effort %>%
   unnest(data) %>%
-  unnest(t.test) %>%
+  mutate(stratum = stri_sub(stratum, 2,3)) %>%
   ggplot() +
-  geom_line(aes(x = est_year, y = strata_effort_ratio, group = stratum, color = as.factor(stratum))) + 
-  geom_segment(aes(x = 1970, xend = 2009, y = effort_fraction_1970to2009, yend = effort_fraction_1970to2009)) +
-  geom_segment(aes(x = 2010, xend = 2019, y = effort_fraction_2010to2019, yend = effort_fraction_2010to2019)) +
-  facet_wrap(~region) +
-  theme_gmri() +
+  geom_line(aes(x = est_year, y = strata_effort_ratio, group = stratum, color = as.factor(stratum)), linewidth = 1.5) + 
+  ylim(c(0.000, 0.100)) +
+  guides(col = guide_legend(title = "Stratum", nrow = 4, byrow = TRUE)) +
+  theme_gmri(legend.title = element_text(size = 20, face = "bold"),
+             legend.text  = element_text(size = 20),
+             legend.position = "bottom",
+             axis.title   = element_text(size = 25, face = "bold"),
+             axis.text    = element_text(size = 25))+
+  xlab("Year") +
+  ylab("Proportion of Annual Tows") +
   scale_color_gmri()
-ggsave("all_strata_plot.png", all_strata_plot, height = 8.5, width = 11, units = "in", bg = "white")
+
+ggsave("all_strata_plot.png", all_strata_plot, height = 15, width = 15, units = "in", bg = "white")
 
 avg_strata_plot <- strata_effort %>%
   unnest(data) %>%
+  mutate(stratum = stri_sub(stratum, 2,3)) %>%
   drop_na() %>%
   group_by(region, est_year) %>%
   nest() %>%
@@ -109,8 +116,11 @@ write.csv(survey_tows, "survey_tows.csv")
 group1 <- survey_tows %>%
   filter(est_year %in% seq("1970", "2009")) %>%
   ggplot() +
-  geom_histogram(aes(x=decdeg_beglat))+
-  ggtitle("1970-2009")
+  geom_histogram(aes(x=decdeg_beglat), color = "white", fill = "#00608A")+
+  ggtitle("1970-2009") +
+  ylab("Count") +
+  xlab("Latitude") + 
+  theme_gmri()
 
 group2 <-survey_tows %>%
   filter(est_year %in% seq("2010", "2019")) %>%
@@ -249,7 +259,7 @@ group4 <-  survey_tows %>%
 df <- group1 %>%
   rbind(group2) %>%
   rbind(group3) %>%
-  rbind(group4) %>%
+  #rbind(group4) %>%
   group_by(group) %>%
   nest()
 
@@ -451,3 +461,66 @@ all_strata_hist <- survey_tows %>%
 
 all_strata_plot <- patchwork::wrap_plots(all_strata_hist$plot[1:5], ncol = 2)
 ggsave("all_strata.png", all_strata_plot, width = 11, height = 8.5, units = "in")
+
+# 3 panel histograms
+group_labels <- c("1970-2009", "2010-2019", "2010-2019 (2017 removed)")
+names(group_labels) <- c("1970-2009","2010-2019","!2017")
+
+revised_histograms <- df %>%
+  unnest(data) %>%
+  unnest(lat:bt) %>% 
+  rename("Latitude"            = "decdeg_beglat",
+         "Longitude"           = "decdeg_beglon",
+         "Depth (m)"           = "avgdepth",
+         "Surface Temperature" = "surftemp",
+         "Bottom Temperature"  = "bottemp") %>% 
+  pivot_longer(cols = 3:7, names_to = "variable", values_to = "measurement") %>%
+  group_by(variable) %>%
+  nest() 
+
+# test plot
+revised_histograms %>% 
+  filter(variable == "Latitude") %>%
+  unnest(data) %>% 
+  mutate(across(group, factor, levels=c("1970-2009","2010-2019","!2017"))) %>%
+  ggplot(aes(x = measurement)) +
+  geom_histogram(aes(y = after_stat(density)), color = "white", fill = "darkgray") +
+  facet_wrap(~group, scales = "free_x", labeller = labeller(group = group_labels)) +
+  theme_gmri(legend.position = "none",
+             axis.title = element_text(size = 12, face = "bold"),
+             strip.background = element_rect(fill = "#00608A"),
+             strip.text = element_text(color = "white", face = "bold", size =11),
+             panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray")) +
+  xlab(paste(revised_histograms$variable)) +
+  ylab("Frequency") +
+  ggtitle("Latitude")
+
+# apply to all 
+revised_histograms <- revised_histograms %>% 
+  mutate(plot = map2(data, variable, function(df, variable){
+    df <- df %>% mutate(across(group, factor, levels=c("1970-2009","2010-2019","!2017")))
+    ggplot(data = df, aes(x = measurement)) +
+      geom_histogram(aes(y = after_stat(density)), color = "white", fill = "darkgray") +
+      facet_wrap(~group, labeller = labeller(group = group_labels)) +
+      theme_gmri(legend.position = "none",
+                 plot.title  = element_text(size = 15, face = "bold"),
+                 #axis.title = element_text(size = 18, face = "bold"),
+                 axis.title = element_blank(),
+                 axis.text  = element_text(size = 15),
+                 strip.background = element_rect(fill = "#00608A"),
+                 strip.text = element_text(color = "white", face = "bold", size = 15),
+                 panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray")) +
+      xlab(paste(variable)) +
+      #ylab("Frequency (proportion)") +
+      ggtitle(paste(variable))}))
+
+revised_histograms$plot[1]
+histograms <- revised_histograms$plot[1:5]
+
+all_hists <- marrangeGrob(histograms, layout_matrix = matrix(1:5, nrow = 5, ncol = 1, byrow = TRUE), top = NULL, left = textGrob(
+  expression(bold("Frequency (proportion)")), rot = 90,
+  gp = gpar(col = "black", fontsize = 16)) )
+ggsave("Temp_Results/Plots/All_Variables_Histograms.png", all_hists, width = 12.5, height = 15, units = "in", bg = "white")
+
+all_hist_test <- patchwork::wrap_plots(histograms, ncol = 1)
+all_hi

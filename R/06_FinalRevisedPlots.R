@@ -57,9 +57,10 @@ all_strata_gt <- lat_gt %>%
   full_join(bt_gt) %>%
   mutate(comname = stringr::str_to_sentence(comname)) %>%
   arrange(comname)
+write.csv(all_strata_gt, "Data/table1.csv")
 
 # make gt table
-tab <- all_strata_gt %>%
+tab<- all_strata_gt %>%
   gt(groupname_col = NULL) %>%
   tab_spanner(label = md("**Latitude (\u00B0N)**"), columns = c("avglat1970", "avglat2010", "avglatp")) %>%
   tab_spanner(label = md("**Longitude (\u00B0W)**"), columns = c("avglon1970", "avglon2010", "avglonp")) %>%
@@ -83,7 +84,9 @@ tab <- all_strata_gt %>%
     avgbot1970 = md("*1970-2009*"),
     avgbot2010 = md("*2010-2019*"),
     avgbotp    = md("*p*")) %>%
-  fmt_number(columns = everything(), decimals = 2) %>%
+  fmt_number(columns = c(avglatp, avglonp, avgdepthp, avgsstp, avgbotp), decimals = 3) %>%
+  fmt_number(columns = c(avglat1970, avglat2010, avglon1970, avglon2010, avgdepth1970, avgdepth2010, avgsst1970, avgsst2010,
+                        avgbot1970, avgbot2010), decimals = 2) %>%
   sub_missing(columns = everything(), rows = everything(), missing_text = "") %>%
   tab_footnote(footnote = md("*2017 excluded from 2010-2019 means*"))
 gt::gtsave(tab, "table1.docx")
@@ -106,7 +109,6 @@ all_strata_dist <- all_strata_dist %>%
       geom_segment(aes(x = 2010, xend = 2019, y = mean10_19, yend = mean10_19), color = "#EA4F12") +
       ggtitle(comname) +
       theme_gmri(axis.title = element_blank(),
-                 #axis.title.y = paste(variable),
                  plot.title = element_text(size = 15),
                  axis.text.y = element_text(size=10),
                  strip.background = element_blank(),
@@ -116,30 +118,34 @@ all_strata_dist <- all_strata_dist %>%
   group_by(variable) %>%
   nest()
 
-depth <- all_strata_dist[[2]][[1]][[3]]
+#depth <- all_strata_dist[[2]][[1]][[3]]
 bt    <- all_strata_dist[[2]][[2]][[3]]
 sst   <- all_strata_dist[[2]][[3]][[3]]
 lat   <- all_strata_dist[[2]][[4]][[3]]
 lon   <- all_strata_dist[[2]][[5]][[3]]
 
 # depth multipanel
-species_depth <- marrangeGrob(depth, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Depth (m)")))
-ggsave("Temp_Results/Plots/Depth_multipanel.pdf", species_depth, height =15, width = 12.5, units = "in")
+# species_depth <- marrangeGrob(depth, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Depth (m)")))
+# ggsave("Temp_Results/Plots/Depth_multipanel.pdf", species_depth, height = 15, width = 12.5, units = "in")
 
 # bt multipanel
-species_bt <- marrangeGrob(bt, layout_matrix = matrix(1:20,  nrow = 5, ncol=4, byrow=TRUE), top = NULL, left = quote(paste("Bottom Temperature (\u00B0C)")))
+species_bt <- marrangeGrob(bt, layout_matrix = matrix(1:20,  nrow = 5, ncol=4, byrow=TRUE), top = NULL, left = textGrob(
+  expression(bold("Bottom Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
 ggsave("Temp_Results/Plots/BT_multipanel.pdf", species_bt, height = 15, width = 12.5, units ="in")
 
 # sst multipanel 
-species_sst <- marrangeGrob(sst, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Surface Temperature (\u00B0C)")))
+species_sst <- marrangeGrob(sst, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
+  expression(bold("Surface Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
 ggsave("Temp_Results/Plots/SST_multipanel.pdf", species_sst, height = 15, width = 12.5, units = "in")
 
 # lat multipanel 
-species_lat <- marrangeGrob(lat, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Latitude (\u00B0N)")))
+species_lat <- marrangeGrob(lat, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
+  expression(bold("Latitude (\u00B0N)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
 ggsave("Temp_Results/Plots/Lat_Multipanel.pdf", species_lat, height = 15, width = 12.5, units = "in")
 
 #lon multipanel
-species_lon <-  marrangeGrob(lon, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Longitude (\u00B0W)")))
+species_lon <-  marrangeGrob(lon, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
+  expression(bold("Longitude (\u00B0W)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
 ggsave("Temp_Results/Plots/Lon_Multipanel.pdf", species_lon, height = 15, width = 12.5, units = "in")
 
 ## 8/24 realized the y-axis on the depth plots should be reversed so that larger (more negative) values are on the bottom
@@ -167,7 +173,8 @@ revised_depth <- all_strata_dist %>%
 depth <- revised_depth[[2]][[1]][[4]]
 
 # depth multipanel
-species_depth <- marrangeGrob(depth, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = quote(paste("Depth (m)")))
+species_depth <- marrangeGrob(depth, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
+  expression(bold("Depth (m)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
 ggsave("Temp_Results/Plots/Depth_multipanel.pdf", species_depth, height =15, width = 12.5, units = "in")
 
 ## Significant Movers Map ####
@@ -202,38 +209,50 @@ library(rnaturalearthdata)
 library(sf)
 library(ggrepel)
 
-world <- ne_countries(scale = "medium", returnclass = "sf")
-movement <- ggplot(data=world)+
+world <- ne_states(returnclass = "sf")
+movement <- 
+  ggplot(data=world)+
   geom_sf()+
-  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47))+
-  geom_line(data=movers_plot, aes(x=avg_lon, y=avg_lat, group = comname), color="#535353", linewidth = 0.5)+
-  geom_point(data=movers_plot, aes(x=avg_lon, y=avg_lat, color = group), size=2)+
-  #scale_color_gmri() +
-  scale_color_manual(name = "Years", labels = c("2010-2019", "1970-2009"), values=c("#EA4f12", "#00608A"))+
-  theme_gmri(legend.text = element_text(size = 12),
-             legend.title = element_text(size = 12, face = "bold"),
+  coord_sf(xlim=c(-74.5, -67.5), ylim=c(37.5, 43))+
+  geom_point(data=movers_plot, aes(x=avg_lon, y=avg_lat, fill = group), pch = 21, size = 12)+
+  geom_line(data=movers_plot, aes(x=avg_lon, y=avg_lat, group = comname), alpha = 0.5, color="#535353", linewidth = 1.5)+
+  scale_fill_manual(name = "Years", labels = c("2010-2019", "1970-2009"), values=c("#EA4f12", "#00608A"))+
+  theme_gmri(legend.text = element_text(size = 35),
+             legend.title = element_text(size = 40, face = "bold"),
              axis.line = element_blank(),
-             axis.title = element_text(size = 12, face = "bold"),
+             axis.title = element_text(size = 40, face = "bold"),
+             axis.text  = element_text(size = 35),
+             plot.title = element_text(size = 35), 
              panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray"))+
-  ggtitle("Mean Center of Biomass")+
   ylab("Latitude")+
   xlab("Longitude")+
-  guides(color = guide_legend(reverse=TRUE)) +
-  geom_text(data= plot_names, aes(x=avg_lon, y=avg_lat, label= rowid)) +
-  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66))
-ggsave("movement.png", movement, height = 10, width = 10, units="in")
+  guides(fill = guide_legend(reverse=TRUE)) +
+  #geom_text(data = plot_names, aes(x=avg_lon, y=avg_lat, label= rowid), fontface = "bold", color = "white", size = 6) +
+  scale_y_continuous(breaks = c(38,40,42)) + scale_x_continuous(breaks = c(-74,-71,-68))
+ggsave("movement.png", movement, height = 18, width = 27, units="in", bg = "white")
 
 # Map Legend
 legend <- plot_names %>%
   select(rowid, comname) %>%
   gt(groupname_col = NULL) %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_body(columns = rowid)) %>%
+  tab_style(
+    style = cell_text(size = "x-large"),
+    locations = cells_body(columns = everything(), rows = everything())) %>% 
+  tab_style(
+    style = cell_text(size = "xx-large"),
+    locations = cells_column_labels(columns = everything()))%>%
   cols_label(comname = md("**Species**"),
              rowid = "") 
 gtsave(legend, "legend.png")
 
+patchwork::wrap_ggplot_grob(movement, legend)
+
 # Decadal Maps
 decadal_maps <- all_strata %>%
-  filter(comname %in% c("Acadian redfish", "American lobster", "Blackbelly rosefish", "Summer flounder")) %>%
+  filter(comname %in% c("Acadian redfish","Summer flounder",  "American lobster" )) %>%
   filter(variable %in% c("avg_lat", "avg_lon")) %>%
   select(comname, variable, data) %>%
   unnest(data) %>%
@@ -242,11 +261,11 @@ decadal_maps <- all_strata %>%
 
 gradient_map <- ggplot(data=world)+
   geom_sf()+
-  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47)) +
-  geom_point(data = decadal_maps, aes(x=avg_lon, y= avg_lat, color = Decade), size = 3) +
-  scale_color_continuous()+
-  facet_wrap(~comname, nrow = 1) +
- #scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66)) +
+  coord_sf(xlim=c(-76, -66), ylim=c(37.5,45)) +
+  geom_point(data = decadal_maps, aes(x=avg_lon, y= avg_lat, color = as.factor(Decade)), size = 3) +
+  scale_color_manual(values = icon_cols)+
+  facet_wrap(~factor(comname, levels = c("Acadian redfish", "Summer flounder", "American lobster")), nrow = 1) +
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66)) +
   theme_gmri(legend.title = element_text(face = "bold", size = 12),
              legend.text = element_text(size = 12), 
              axis.title = element_blank(),
@@ -254,8 +273,8 @@ gradient_map <- ggplot(data=world)+
              strip.text = element_text(size = 12),
              strip.background = element_rect(fill = "#00608A"), 
              panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray")) +
-  guides(color = guide_legend(override.aes = list(size = 5)))
-
+  guides(color = guide_legend(title = "Decade", override.aes = list(size = 5)))
+print(gradient_map)
 ggsave("Temp_Results/Maps/Decadal_Gradient.pdf", width = 15, height = 7, units = "in")
 
 # try with means?
@@ -281,12 +300,12 @@ ggplot(data=world)+
   #guides(color = guide_legend(override.aes = list(size = 5)))
 
 # try with icons 
-icon_cols <- c("#000000", "#072D3B", "#0E6686", "#028ABD", "#02D2FF")
-rosefish_1970 <- paste(readLines("Data/1970.svg", warn=F), collapse = "\n")
-rosefish_1980 <- paste(readLines("Data/1980.svg", warn=F), collapse = "\n")
-rosefish_1990 <- paste(readLines("Data/1990.svg", warn=F), collapse = "\n")
-rosefish_2000 <- paste(readLines("Data/2000.svg", warn=F), collapse = "\n")
-rosefish_2010 <- paste(readLines("Data/2010.svg", warn=F), collapse = "\n")
+icon_cols <- c("#7D7C7C", "#22444B", "#0E6686", "#028ABD", "#02D2FF")
+rosefish_1970 <- paste(readLines("Data/Rosefish/1970.svg", warn=F), collapse = "\n")
+rosefish_1980 <- paste(readLines("Data/Rosefish/1980.svg", warn=F), collapse = "\n")
+rosefish_1990 <- paste(readLines("Data/Rosefish/1990.svg", warn=F), collapse = "\n")
+rosefish_2000 <- paste(readLines("Data/Rosefish/2000.svg", warn=F), collapse = "\n")
+rosefish_2010 <- paste(readLines("Data/Rosefish/2010.svg", warn=F), collapse = "\n")
 
 rosefish_icon <- as.data.frame(c(rosefish_1970, rosefish_1980, rosefish_1990, rosefish_2000, rosefish_2010)) %>%
   rename("Icons" = "c(rosefish_1970, rosefish_1980, rosefish_1990, rosefish_2000, rosefish_2010)")
@@ -313,12 +332,64 @@ rosefish_plot <- ggplot(data=world)+
   ylab("Latitude") +
   theme_gmri(legend.title = element_text(face = "bold", size = 12),
              legend.text = element_text(size = 12), 
-             axis.title = element_blank(),
+             #axis.title = element_blank(),
              axis.text = element_text(size = 12), 
              strip.text = element_text(size = 12),
              strip.background = element_rect(fill = "#00608A"), 
              panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray")) 
 ggsave("Temp_Results/Rosefish.png", rosefish_plot, height = 10, width = 10, units = "in", bg = "white")
+
+# For all four example species
+read_svg_func <- function(file_name) {
+  out <- paste(readLines(paste0(file_name), warn=F), collapse = "\n")
+  return(out)
+}
+Decade <- as.data.frame(c("1970", "1980", "1990", "2000", "2010"))
+colnames(Decade) <- "Decade"
+
+all_icons <- tibble("File_Path" = list.files("Data/Icons", pattern = ".svg", full.names = TRUE)) %>%
+  mutate(., "Data" = map(File_Path, read_svg_func)) %>%
+  rowid_to_column()
+
+all_icons <- all_icons %>%
+  filter(rowid %in% seq(1,5)) %>% mutate(comname = "Summer flounder") %>%
+  cbind(Decade) %>%
+  full_join(all_icons %>% filter(rowid %in% seq(6,10)) %>% mutate(comname  = "American lobster") %>% cbind(Decade)) %>%
+  full_join(all_icons %>% filter(rowid %in% seq(11,15)) %>% mutate(comname = "Acadian redfish")  %>% cbind(Decade)) %>%
+  full_join(all_icons %>% filter(rowid %in% seq(16,20)) %>% mutate(comname = "Blackbelly rosefish") %>% cbind(Decade)) 
+
+decadal_maps <- decadal_maps %>%
+  mutate(Decade = as.character(Decade)) %>%
+  group_by(comname, Decade) %>%
+  nest() %>%
+  full_join(all_icons) %>%
+  unnest(data) %>%
+  unnest(Data)
+
+icon_map <- ggplot(data=world)+
+  geom_sf()+
+  coord_sf(xlim=c(-76, -66), ylim=c(37.5,47)) +
+  geom_point(data = decadal_maps, aes(x = avg_lon, y= avg_lat, color = as.factor(Decade)), size = 0.05) +
+  geom_point_svg(data    = decadal_maps, 
+                 mapping = aes(x=avg_lon, y= avg_lat), 
+                 size    = 5, 
+                 svg     = decadal_maps$Data) +
+  scale_color_manual(values = icon_cols) + 
+  scale_y_continuous(breaks = c(36,40,44)) + scale_x_continuous(breaks = c(-78,-72,-66)) +
+  guides(color = guide_legend(title = "Decade", override.aes = list(size = 5))) +
+  facet_wrap(~comname, nrow = 1) + 
+  xlab("Longitude") +
+  ylab("Latitude") +
+  theme_gmri(legend.title = element_text(face = "bold", size = 12),
+             legend.text = element_text(size = 12), 
+             #axis.title = element_blank(),
+             axis.text = element_text(size = 12), 
+             strip.text = element_text(size = 12),
+             strip.background = element_rect(fill = "#00608A"), 
+             panel.border = element_rect(fill = NA, linetype = 1, linewidth = 1, color = "lightgray")) 
+
+ggsave("Temp_Results/Maps/Decadal_Gradient_Icons.pdf", icon_map, width = 15, height = 7, units = "in")
+
 
 ## Quadrant ####
 nontrackers <- all_strata %>%
@@ -384,3 +455,82 @@ gtsave(tab2, "Temp_Results/table1_w_movement_class.docx")
 quad %>%
   gt(groupname_col = NULL) %>%
   cells_row_groups(groups = everything())
+
+## strata comparison table for the weirdos
+# read in strata_t_test_comparison.csv
+var <- as.data.frame(c('Depth', 'Bottom Temperature', 'Surface Temperature', 'Latitude', 'Longitude')) 
+colnames(var) <- "var"
+
+strata_comp_dt <- t.test.comparison %>% 
+  group_by(variable) %>%
+  nest() %>%
+  cbind(var) %>%
+  unnest(data) %>%
+  relocate(var, .after = comname) %>%
+  filter(significant_change == "True") %>%
+  mutate(comname = str_to_sentence(comname)) %>% 
+  arrange(comname) %>%
+  gt(groupname_col = NULL) %>%
+  tab_spanner(label = md("**All Strata**"), columns = c("all_strata_1970_2009", "all_strata_2010_2009", "all_strata")) %>%
+  tab_spanner(label = md("**Stratum 16 removed**"), columns = c("no_16_strata_1970_2009","no_16_strata_2010_2019", "revised")) %>%
+  cols_label(
+    comname = md("**Species**"),
+    var = md("**Variable**"), 
+    all_strata_1970_2009 = md("*1970-2009*"),
+    all_strata_2010_2009 = md("*2010-2019*"),
+    all_strata = md("*p*"), 
+    no_16_strata_1970_2009 = md("*1970-2009*"),
+    no_16_strata_2010_2019 = md("*2010-2019*"),
+    revised = md("*p*"))  %>%
+  tab_style(
+    style = cell_text(size = "x-large"),
+    locations = cells_body(columns = everything(), rows = everything())) %>% 
+  tab_style(
+    style = cell_text(size = "x-large"),
+    locations = cells_column_labels(columns = everything())) %>%
+  tab_style(
+    style = cell_text(size = "x-large"),
+    locations = cells_column_spanners()) %>%
+  cols_hide(columns = c("change", "significant_change", "variable")) %>%
+  fmt_number(columns = c("all_strata_1970_2009", "all_strata_2010_2009","no_16_strata_1970_2009","no_16_strata_2010_2019"), decimals = 2) %>%
+  fmt_number(columns = c("all_strata", "revised"), decimals = 3)
+
+gtsave(strata_comp_dt, "strata_comparison.png")
+
+# looking at stuff
+View(all_strata %>%
+  filter(variable == "avg_depth") %>%
+  filter(different == "TRUE") %>%
+  filter(mean70_09 > mean10_19))
+
+all_strata %>%
+  filter(variable == "avg_sur_temp") %>%
+  filter(different == "TRUE") %>%
+  #filter((mean10_19 - mean70_09) > 25) %>%
+  mutate(mean_diff = (mean10_19 - mean70_09)) %>%
+  arrange(desc(mean_diff))
+
+quad %>%
+  filter(Quad == "Effective trackers")
+
+
+# R/SB Table
+r_sb_table <- read_csv("Data/r_sb_table.csv") %>%
+  mutate(sig = ifelse(p < 0.05, 'Yes', 'No'))
+
+r_sb_table %>%
+  gt() %>%
+  tab_spanner(columns = c("pre-2010", "post-2010", "% change"), label = md("**R/S**")) %>%
+  cols_hide(sig) %>%
+  tab_style(style = cell_text(weight = "bold"),
+            locations = cells_body(columns = c(`p`, `pre-2010`, `post-2010`, `% change`),
+                                   rows = p <0.05)) %>%
+  cols_label(
+    `Species`   = md("**Species**"),
+    `Stock`     = md("**Stock**"),
+    `pre-2010`  = md("*Pre-2010*"),
+    `post-2010` = md("*Post-2010*"),
+    `% change`  = md("*Percent Change*"),
+    `p`         = md("*p*")) %>%
+  fmt_number(columns = !p, decimals = 2) -> rs_table
+gtsave(file = "RS_Table.png", rs_table)
