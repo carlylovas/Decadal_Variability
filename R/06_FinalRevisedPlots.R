@@ -103,17 +103,23 @@ all_strata_dist <- all_strata %>%
 all_strata_dist <- all_strata_dist %>%
   mutate(plot = map2(data, comname, function(df, comname){
     plot <- ggplot(data = df) +
-      geom_line(aes(x=est_year, y=measurement), color = "#E9E9E9", linewidth = 0.5)+
-      geom_point(aes(x = est_year, y = measurement), size=0.5)+
-      geom_segment(aes(x = 1970, xend = 2009, y = mean70_09, yend = mean70_09), color = "#00608A") +
-      geom_segment(aes(x = 2010, xend = 2019, y = mean10_19, yend = mean10_19), color = "#EA4F12") +
+      geom_line(aes(x=est_year, y=measurement), color = "#E9E9E9", linewidth = 0.45)+
+      geom_point(aes(x = est_year, y = measurement), size=0.2)+
+      geom_segment(aes(x = 1970, xend = 2009, y = mean70_09, yend = mean70_09), linewidth = 0.7, color = "#00608A") +
+      geom_segment(aes(x = 2010, xend = 2019, y = mean10_19, yend = mean10_19), linewidth = 0.7, color = "#EA4F12") +
       ggtitle(comname) +
+      # theme_gmri(axis.title = element_blank(),
+      #            plot.title = element_text(size = 8),
+      #            axis.text = element_text(size=5),
+      #            strip.background = element_blank(),
+      #            strip.text = element_text(color = "black"))
       theme_gmri(axis.title = element_blank(),
-                 plot.title = element_text(size = 15),
-                 axis.text.y = element_text(size=10),
-                 strip.background = element_blank(),
-                 strip.text = element_text(color = "black"))
-      
+            plot.title = element_text(size = 8),
+            axis.text=element_text(size = 6),
+            panel.grid=element_line(size = 0.2),
+            axis.line.x=element_line(size = 0.1),
+            axis.ticks.x=element_line(size = 0.1),
+            plot.margin   = margin(t = 8, b = 4, r = 8, l = 4))
     return(plot)})) %>%
   group_by(variable) %>%
   nest()
@@ -130,23 +136,23 @@ lon   <- all_strata_dist[[2]][[5]][[3]]
 
 # bt multipanel
 species_bt <- marrangeGrob(bt, layout_matrix = matrix(1:20,  nrow = 5, ncol=4, byrow=TRUE), top = NULL, left = textGrob(
-  expression(bold("Bottom Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
-ggsave("Temp_Results/Plots/BT_multipanel.pdf", species_bt, height = 15, width = 12.5, units ="in")
+  expression(bold("Bottom Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 8)))
+ggsave("Temp_Results/Revised/Figure_S7_BotTemp.pdf", species_bt, width = 170, height = 225, units ="mm", dpi = 500)
 
 # sst multipanel 
 species_sst <- marrangeGrob(sst, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
-  expression(bold("Surface Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
-ggsave("Temp_Results/Plots/SST_multipanel.pdf", species_sst, height = 15, width = 12.5, units = "in")
+  expression(bold("Surface Temperature (\u00B0C)")), rot = 90, gp = gpar(col = "black", fontsize = 8)))
+ggsave("Temp_Results/Revised/Figure_S6_SurfTemp.pdf", species_sst, height = 225, width = 170, units = "mm")
 
 # lat multipanel 
 species_lat <- marrangeGrob(lat, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
-  expression(bold("Latitude (\u00B0N)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
-ggsave("Temp_Results/Plots/Lat_Multipanel.pdf", species_lat, height = 15, width = 12.5, units = "in")
+  expression(bold("Latitude (\u00B0N)")), rot = 90, gp = gpar(col = "black", fontsize = 8)))
+ggsave("Temp_Results/Revised/Figure_S3_Latitude.pdf", species_lat, height = 225, width = 170, units = "mm")
 
 #lon multipanel
 species_lon <-  marrangeGrob(lon, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
-  expression(bold("Longitude (\u00B0W)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
-ggsave("Temp_Results/Plots/Lon_Multipanel.pdf", species_lon, height = 15, width = 12.5, units = "in")
+  expression(bold("Longitude (\u00B0W)")), rot = 90, gp = gpar(col = "black", fontsize = 8)))
+ggsave("Temp_Results/Revised/Figure_S4_Longitude.pdf", species_lon, height = 225, width = 170, units = "mm")
 
 ## 8/24 realized the y-axis on the depth plots should be reversed so that larger (more negative) values are on the bottom
 revised_depth <- all_strata_dist %>%
@@ -154,19 +160,19 @@ revised_depth <- all_strata_dist %>%
   unnest(data) %>% 
   mutate(plot_revised = map2(data, comname, function(df, comname){
     plot <- ggplot(data = df) +
-      geom_line(aes(x=est_year, y=measurement), color = "#E9E9E9", linewidth = 0.5)+
-      geom_point(aes(x = est_year, y = measurement), size=0.5)+
-      geom_segment(aes(x = 1970, xend = 2009, y = mean70_09, yend = mean70_09), color = "#00608A") +
-      geom_segment(aes(x = 2010, xend = 2019, y = mean10_19, yend = mean10_19), color = "#EA4F12") +
-      scale_y_reverse() +
+      geom_line(aes(x=est_year, y=measurement), color = "#E9E9E9", linewidth = 0.45)+
+      geom_point(aes(x = est_year, y = measurement), size=0.2)+
+      geom_segment(aes(x = 1970, xend = 2009, y = mean70_09, yend = mean70_09), linewidth = 0.7, color = "#00608A") +
+      geom_segment(aes(x = 2010, xend = 2019, y = mean10_19, yend = mean10_19), linewidth = 0.7, color = "#EA4F12") +
       ggtitle(comname) +
+      scale_y_reverse() +
       theme_gmri(axis.title = element_blank(),
-                 #axis.title.y = paste(variable),
-                 plot.title = element_text(size = 15),
-                 axis.text.y = element_text(size=10),
-                 strip.background = element_blank(),
-                 strip.text = element_text(color = "black"))
-    
+                 plot.title = element_text(size = 8),
+                 axis.text=element_text(size = 6),
+                 panel.grid=element_line(size = 0.2),
+                 axis.line.x=element_line(size = 0.1),
+                 axis.ticks.x=element_line(size = 0.1),
+                 plot.margin   = margin(t = 8, b = 4, r = 8, l = 4))
     return(plot)})) %>%
   group_by(variable) %>%
   nest()
@@ -174,8 +180,8 @@ depth <- revised_depth[[2]][[1]][[4]]
 
 # depth multipanel
 species_depth <- marrangeGrob(depth, layout_matrix = matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE), top = NULL, left = textGrob(
-  expression(bold("Depth (m)")), rot = 90, gp = gpar(col = "black", fontsize = 16)))
-ggsave("Temp_Results/Plots/Depth_multipanel.pdf", species_depth, height =15, width = 12.5, units = "in")
+  expression(bold("Depth (m)")), rot = 90, gp = gpar(col = "black", fontsize = 8)))
+ggsave("Temp_Results/Revised/Figure_S5_Depth.pdf", species_depth, height =225, width = 170, units = "mm")
 
 ## Significant Movers Map ####
 significant_movers <- all_strata %>%

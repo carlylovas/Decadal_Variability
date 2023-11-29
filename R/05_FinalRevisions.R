@@ -77,19 +77,20 @@ all_strata_plot <- strata_effort %>%
   unnest(data) %>%
   mutate(stratum = stri_sub(stratum, 2,3)) %>%
   ggplot() +
-  geom_line(aes(x = est_year, y = strata_effort_ratio, group = stratum, color = as.factor(stratum)), linewidth = 1.5) + 
+  geom_line(aes(x = est_year, y = strata_effort_ratio, group = stratum, color = as.factor(stratum)), linewidth = 1.0) + 
   ylim(c(0.000, 0.100)) +
   guides(col = guide_legend(title = "Stratum", nrow = 4, byrow = TRUE)) +
-  theme_gmri(legend.title = element_text(size = 20, face = "bold"),
-             legend.text  = element_text(size = 20),
+  theme_gmri(legend.title = element_text(size = 8, face = "bold"),
+             legend.text  = element_text(size = 6),
              legend.position = "bottom",
-             axis.title   = element_text(size = 25, face = "bold"),
-             axis.text    = element_text(size = 25))+
+             axis.title   = element_text(size = 8, face = "bold"),
+             axis.text    = element_text(size = 7))+
   xlab("Year") +
   ylab("Proportion of Annual Tows") +
   scale_color_gmri()
 
 ggsave("all_strata_plot.png", all_strata_plot, height = 15, width = 15, units = "in", bg = "white")
+ggsave("Figure_S1.pdf", all_strata_plot, height = 170, width = 170, units = "mm", bg = "white")
 
 avg_strata_plot <- strata_effort %>%
   unnest(data) %>%
